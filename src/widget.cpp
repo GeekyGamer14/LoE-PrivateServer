@@ -4,6 +4,7 @@
 #include "message.h"
 #include "utils.h"
 #include "items.h"
+#include "StdAfx.h"
 
 #if defined _WIN32 || defined WIN32
 #include <windows.h>

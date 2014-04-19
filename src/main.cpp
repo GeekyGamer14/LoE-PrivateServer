@@ -1,5 +1,6 @@
 #include <QtWidgets/QApplication>
 #include "widget.h"
+#include "StdAfx.h"
 
 int argc=0;
 
