@@ -4,7 +4,6 @@
 #include "message.h"
 #include "utils.h"
 #include "items.h"
-#include "StdAfx.h"
 
 #if defined _WIN32 || defined WIN32
 #include <windows.h>
@@ -49,7 +48,8 @@ void Widget::logMessage(QString msg)
 /// Reads the config file (server.ini) and start the server accordingly
 void Widget::startServer()
 {
-    logStatusMessage("Private server v0.5.2-alpha");
+    logStatusMessage("iQuestria Private Server v0.5.2-alpha");
+    logStatusMessage("Project adapted from GitHub repo tux3/LoE-PrivateServer");
 #ifdef __APPLE__
     // this fixes the directory in OSX so we can use the relative CONFIGFILEPATH and etc properly
     CFBundleRef mainBundle = CFBundleGetMainBundle();

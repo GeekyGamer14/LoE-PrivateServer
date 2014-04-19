@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>mlkj's Private Server</string>
+   <string>ASSFUCK</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../Pictures/iq/16.png</normaloff>../../../../Pictures/iq/16.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
@@ -37,7 +41,7 @@
    <item row="2" column="2">
     <widget class="QPushButton" name="sendButton">
      <property name="text">
-      <string>Send</string>
+      <string>Submit</string>
      </property>
     </widget>
    </item>
