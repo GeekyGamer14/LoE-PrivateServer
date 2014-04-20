@@ -38,6 +38,7 @@ You can find more informations on how to create/edit quests in the file QuestScr
 You don't need any of those commands to play, but they might be usefull.
 setPeer is used to select a client. Most commands will only act on the selected client.
 For example if you're stuck, do setPeer with your IP and port, then do for example "load PonyVille".
+- say message: Broadcasts `message` in the chat as [Server]
 - stop : Stops the server and exit.
 - clear : Clears the server's log.
 - listPeers : Give the list of all the clients (= other players) connected
