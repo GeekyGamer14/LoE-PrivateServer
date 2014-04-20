@@ -149,6 +149,7 @@ void Widget::startServer()
                 vortex.destPos.y = elems[elems.size()-2].toFloat(&ok3);
                 vortex.destPos.z = elems[elems.size()-1].toFloat(&ok4);
                 if (!(ok1&&ok2&&ok3&&ok4))
+                    // i think its ok now
                 {
                     logStatusMessage("Vortex DB is corrupted. Conversion failed, file " + files[i]);
                     corrupted=true;

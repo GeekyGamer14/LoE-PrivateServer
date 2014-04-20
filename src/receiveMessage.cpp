@@ -154,7 +154,7 @@ void receiveMessage(Player* player)
     {
         win.logMessage("UDP: Client disconnected");
         Player::disconnectPlayerCleanup(player); // Save game and remove the player
-        return; // We can't use Player& player anymore, it refers to free'd memory.
+        return; // We can't use Player& player anymore, it refers to freed memory.
     }
     else if ((unsigned char)msg[0] >= MsgUserReliableOrdered1 && (unsigned char)msg[0] <= MsgUserReliableOrdered32) // UserReliableOrdered
     {

@@ -127,7 +127,7 @@ void Widget::udpProcessPendingDatagrams()
         {
             logMessage("UDP: Request from unknown peer rejected : "+rAddr.toString()+":"+QString().setNum(rPort));
             // Send disconnect message manually
-            QString data("You're not connected, please login first. (aka the server has no idea who the hell you are)");
+            QString data("BITCH, YOU ARE EITHER A HACKER OR THE SERVER JUST HATES THE FUCK OUT OF YOU. RELOG OR YOU AINT GETTIN ON THIS SERVER, K?");
             QByteArray msg(6,0);
             msg[0] = MsgDisconnect;
             msg[3] = (quint8)(((data.size()+1)*8)&0xFF);

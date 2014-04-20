@@ -14,10 +14,26 @@ void Widget::sendCmdLine()
     }
 
     QString str = ui->cmdLine->text();
+    win.logMessage("> "+str);
+    ui->cmdLine->setText("");
 
     if (str == "clear")
     {
         ui->log->clear();
+        return;
+    }else if(str.startsWith("say")){
+        str = str.right(str.size()-4);
+        for (int i=0; i<win.udpPlayers.size(); i++)
+        {
+            sendChatMessage(win.udpPlayers[i], "[Chatnone] "+str, "[Server]", ChatNone);
+            sendChatMessage(win.udpPlayers[i], "[Chatuntyped] "+str, "[Server]", ChatUntyped);
+            sendChatMessage(win.udpPlayers[i], "[Chatguild] "+str, "[Server]", ChatGuild);
+            sendChatMessage(win.udpPlayers[i], "[Chatparty] "+str, "[Server]", ChatParty);
+            sendChatMessage(win.udpPlayers[i], "[Chatsystem] "+str, "[Server]", ChatSystem);
+            sendChatMessage(win.udpPlayers[i], "[Chatwhisper] "+str, "[Server]", ChatWhisper);
+            sendChatMessage(win.udpPlayers[i], "[Chatlocal] "+str, "[Server]", ChatLocal);
+        }
+        win.logMessage("[Server] "+str);
         return;
     }
     else if (str == "stop")
@@ -40,7 +56,7 @@ void Widget::sendCmdLine()
         {
             cmdPeer = udpPlayers[0];
             QString peerName = cmdPeer->IP + " " + QString().setNum(cmdPeer->port);
-            logMessage(QString("UDP: Peer set to ").append(peerName));
+            logMessage(QString("[UDP] Peer set to ").append(peerName));
             return;
         }
 
@@ -51,13 +67,13 @@ void Widget::sendCmdLine()
         {
             if (args.size() != 1)
             {
-                logMessage("UDP: setPeer takes a pony id or ip:port combination");
+                logMessage("[UDP] setPeer takes a pony id or ip:port combination");
                 return;
             }
             quint16 id = args[0].toUInt(&ok);
             if (!ok)
             {
-                logMessage("UDP: setPeer takes a pony id as argument");
+                logMessage("[UDP] setPeer takes a pony id as argument");
                 return;
             }
             for (int i=0; i<udpPlayers.size();i++)
@@ -65,30 +81,31 @@ void Widget::sendCmdLine()
                 if (udpPlayers[i]->pony.id == id)
                 {
                     cmdPeer = Player::findPlayer(udpPlayers,udpPlayers[i]->IP, udpPlayers[i]->port);
-                    logMessage(QString("UDP: Peer set to "+udpPlayers[i]->pony.name));
+                    logMessage(QString("[UDP] Peer set to "+udpPlayers[i]->pony.name));
                     return;
                 }
             }
-            logMessage(QString("UDP: Peer not found (id ").append(args[0]).append(")"));
+            logMessage(QString("[UDP] Peer not found (id ").append(args[0]).append(")"));
             return;
         }
 
         quint16 port = args[1].toUInt(&ok);
         if (!ok)
         {
-            logMessage("UDP: setPeer takes a port as argument");
+            logMessage("[UDP] setPeer takes a port as argument");
             return;
         }
 
         cmdPeer = Player::findPlayer(udpPlayers,args[0], port);
         if (cmdPeer->IP!="")
-            logMessage(QString("UDP: Peer set to ").append(str));
+            logMessage(QString("[UDP] Peer set to ").append(str));
         else
-            logMessage(QString("UDP: Peer not found (").append(str).append(")"));
+            logMessage(QString("[UDP] Peer not found (").append(str).append(")"));
         return;
     }
     else if (str.startsWith("listPeers"))
     {
+        win.logMessage("Current peers:");
         if (str.size()<=10)
         {
             for (int i=0; i<win.udpPlayers.size();i++)
@@ -126,7 +143,7 @@ void Widget::sendCmdLine()
     }
     else if (str.startsWith("sync"))
     {
-        win.logMessage("UDP: Syncing manually");
+        win.logMessage("[UDP] Syncing manually");
         sync.doSync();
         return;
     }
@@ -184,7 +201,7 @@ void Widget::sendCmdLine()
         {
             if (udpPlayers[i]->pony.id == destID)
             {
-                logMessage(QString("UDP: Teleported "+sourcePeer->pony.name+" to "+udpPlayers[i]->pony.name));
+                logMessage(QString("[UDP] Teleported "+sourcePeer->pony.name+" to "+udpPlayers[i]->pony.name));
                 if (udpPlayers[i]->pony.sceneName.toLower() != sourcePeer->pony.sceneName.toLower())
                 {
                     sendLoadSceneRPC(sourcePeer, udpPlayers[i]->pony.sceneName, udpPlayers[i]->pony.pos);
@@ -208,7 +225,7 @@ void Widget::sendCmdLine()
         cmdPeer = Player::findPlayer(udpPlayers,cmdPeer->IP, cmdPeer->port);
         if (cmdPeer->IP=="")
         {
-            logMessage(QString("UDP: Peer not found"));
+            logMessage(QString("[UDP] Peer not found"));
             return;
         }
     }
@@ -216,7 +233,7 @@ void Widget::sendCmdLine()
     // User commands from now on (requires setPeer)
     if (str.startsWith("disconnect"))
     {
-        logMessage(QString("UDP: Disconnecting"));
+        logMessage(QString("[UDP] Disconnecting"));
         sendMessage(cmdPeer,MsgDisconnect, "Connection closed by the server admin");
         Player::disconnectPlayerCleanup(cmdPeer); // Save game and remove the player
     }
@@ -248,7 +265,7 @@ void Widget::sendCmdLine()
     }
     else if (str.startsWith("sendUtils3"))
     {
-        logMessage("UDP: Sending Utils3 request");
+        logMessage("[UDP] Sending Utils3 request");
         QByteArray data(1,3);
         sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
     }
@@ -260,7 +277,7 @@ void Widget::sendCmdLine()
         unsigned id = str.toUInt(&ok);
         if (ok)
         {
-            logMessage("UDP: Sending setPlayerId request");
+            logMessage("[UDP] Sending setPlayerId request");
             data[1]=(quint8)(id&0xFF);
             data[2]=(quint8)((id >> 8)&0xFF);
             sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
@@ -312,7 +329,7 @@ void Widget::sendCmdLine()
         unsigned id = str.toUInt(&ok);
         if (ok)
         {
-            logMessage("UDP: Sending remove request");
+            logMessage("[UDP] Sending remove request");
             data[1]=id;
             data[2]=id >> 8;
             sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
@@ -371,7 +388,7 @@ void Widget::sendCmdLine()
     {
         if (str == "instantiate")
         {
-            logMessage("UDP: Instantiating");
+            logMessage("[UDP] Instantiating");
             sendNetviewInstantiate(cmdPeer);
             return;
         }
@@ -440,7 +457,7 @@ void Widget::sendCmdLine()
         data+=floatToData(z2);
         data+=floatToData(w2);
 
-        logMessage(QString("UDP: Instantiating ").append(args[0]));
+        logMessage(QString("[UDP] Instantiating ").append(args[0]));
         sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
     }
     else if (str.startsWith("beginDialog"))

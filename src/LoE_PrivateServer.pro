@@ -52,3 +52,6 @@ macx {
 }
 
 CONFIG += C++11
+
+OTHER_FILES += \
+    128.png

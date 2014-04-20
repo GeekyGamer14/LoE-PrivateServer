@@ -8,7 +8,8 @@ void receiveChatMessage(QByteArray msg, Player* player)
 {
     QString txt = dataToString(msg.mid(7));
     QString author = player->pony.name;
-    //win.logMessage("Chat "+author+":"+txt);
+    win.logMessage("[Chat] "+author+": "+txt);
+    //logStatusMessage("[CHAT] "+author+": "+txt);
 
     if (txt.startsWith("/stuck") || txt.startsWith("unstuck me"))
     {
@@ -75,7 +76,7 @@ void receiveChatMessage(QByteArray msg, Player* player)
             if (player->chatRollCooldownEnd < QDateTime::currentDateTime())
             {
                 rollnum = qrand() % 100;
-                rollstr.sprintf("<span color=\"yellow\">#b%s#b rolls %02d</span>", author.toLocal8Bit().data(), rollnum);
+                rollstr.sprintf("<span color=\"yellow\">#b%s#b assfucks %02d</span>", author.toLocal8Bit().data(), rollnum);
                 player->chatRollCooldownEnd = QDateTime::currentDateTime().addSecs(10);
             }
         }
