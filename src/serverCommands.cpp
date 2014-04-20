@@ -27,13 +27,8 @@ void Widget::sendCmdLine()
         {
             // aaand we send it in every channel because its really
             // really important.
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatNone);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatUntyped);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatGuild);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatParty);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatSystem);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatWhisper);
-            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatLocal);
+                                               //cmon, loe. support css already.
+            sendChatMessage(win.udpPlayers[i], "<span color=\"blue\">[Server]</span> "+str, "", ChatSystem);
         }
         win.logMessage("[Server] "+str);
         return;

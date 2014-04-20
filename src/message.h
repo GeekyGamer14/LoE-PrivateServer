@@ -34,6 +34,7 @@ enum ChatType
 {
     ChatNone = 0,
     ChatUntyped = 1,
+    // NOTE system doesn't take author as an argument
     ChatSystem = 2,
     ChatGeneral = 4,
     ChatLocal = 8,

@@ -107,6 +107,7 @@ void sendPonySave(Player *player, QByteArray msg)
 
     if (netviewId == player->pony.netviewId) // Current player
     {
+                                 // \/ hopefully
         if (player->inGame == 3) // Hopefully that'll fix people stuck on the default cam without creating clones
         {
             win.logMessage("UDP: Savegame already sent to "+QString().setNum(player->pony.netviewId)

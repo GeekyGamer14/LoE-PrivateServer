@@ -44,8 +44,8 @@ void receiveMessage(Player* player)
                 player->nReceivedDups++;
                 if (player->nReceivedDups >= 100) // Kick the player if he's infinite-looping on us
                 {
-                    win.logMessage(QString("UDP: Kicking "+QString().setNum(player->pony.netviewId)+" : Too many packet dups."));
-                    sendMessage(player,MsgDisconnect, "You were kicked for lagging the server, sorry. You can login again.");
+                    win.logMessage(QString("UDP: Kicking "+QString().setNum(player->pony.netviewId)+": Too many packet dups."));
+                    sendMessage(player,MsgDisconnect, "You were kicked. Reason: Too many packet dupes");
                     Player::disconnectPlayerCleanup(player); // Save game and remove the player
                     return;
                 }
@@ -83,7 +83,7 @@ void receiveMessage(Player* player)
         }
         else
         {
-            if (player->nReceivedDups > 0) // If he stopped sending dups, forgive him slowly.
+            if (player->nReceivedDups > 0) // If he stopped sending dupes, forgive him slowly.
                 player->nReceivedDups--;
             //win.logMessage("UDP: Received message (="+QString().setNum(seq)
             //               +") from "+QString().setNum(player->pony.netviewId));
@@ -102,14 +102,14 @@ void receiveMessage(Player* player)
     }
     else if ((unsigned char)msg[0] == MsgPong) // Pong
     {
-        win.logMessage("UDP: Unexpected pong received !");
+        win.logMessage("UDP: Unexpected pong received!");
     }
     else if ((unsigned char)msg[0] == MsgConnect) // Connect SYN
     {
         msg.resize(18); // Supprime le message LocalHail et le Timestamp
         msg = msg.right(13); // Supprime le Header
 #if DEBUG_LOG
-        win.logMessage(QString("UDP: Connecting ..."));
+        win.logMessage(QString("UDP: Connecting..."));
 #endif
         for (int i=0; i<32; i++) // Reset sequence counters
             player->udpSequenceNumbers[i]=0;
@@ -134,7 +134,7 @@ void receiveMessage(Player* player)
         player->pony.id = win.getNewId();
         player->pony.netviewId = win.getNewNetviewId();
         win.lastIdMutex.unlock();
-        win.logMessage("UDP: Set id request : " + QString().setNum(player->pony.id) + "/" + QString().setNum(player->pony.netviewId));
+        win.logMessage("UDP: Set id request: " + QString().setNum(player->pony.id) + "/" + QString().setNum(player->pony.netviewId));
         QByteArray id(3,0); // Set player Id request
         id[0]=4;
         id[1]=(quint8)(player->pony.id&0xFF);
@@ -181,7 +181,7 @@ void receiveMessage(Player* player)
         else if ((quint8)msg[0]==MsgUserReliableOrdered4 && (quint8)msg[5]==0x1 && player->inGame!=0) // Edit ponies request error (happens if you click play twice quicly, for example)
         {
             win.logMessage("UDP: Rejecting game start request from "+QString().setNum(player->pony.netviewId)
-                           +" : player already in game");
+                           +": player already in game");
             // Fix the buggy state we're now in
             // Reload to hide the "saving ponies" message box
             QByteArray data(1,5);
