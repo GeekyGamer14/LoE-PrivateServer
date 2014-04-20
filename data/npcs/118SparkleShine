@@ -1,0 +1,13 @@
+# Metadata
+name Sparkle Shine
+questName Sparkle Shine
+questDescr Sparkle Shine
+questId 118
+scene Canterlot
+pos -97.8233 0.0314512 181.387
+rot 0 1.2 0 1
+ponyData DVNwYXJrbGUgU2hpbmUCAAAAAAAAAAAAAAAAAIX17f///7jm4UT/k6OdlgwACAAAAAAAb0J9P2Zm
+
+# Quest commands
+say Our books can get real heavy, but I suppose that means they're full of useful information!
+end

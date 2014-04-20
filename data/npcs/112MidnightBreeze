@@ -1,0 +1,13 @@
+# Metadata
+name Midnight Breeze
+questName Midnight Breeze
+questDescr Midnight Breeze
+questId 112
+scene PonyVille
+pos -15.7313 -195.311 223.276
+rot 0 1 0 1
+ponyData D01pZG5pZ2h0IEJyZWV6ZQECAAAAAAAAAAAAAAAAUlGlUlGlIiKG8P8Zio6PBgACAAEAAADylIA/R4I=
+
+# Quest commands
+say I love visiting Ponydale. It's like home, and not too much has changed, though the ponies sure have.
+end

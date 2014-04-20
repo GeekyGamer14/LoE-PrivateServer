@@ -1,0 +1,13 @@
+# Metadata
+name Bagels
+scene PonyVille
+pos 38.3822 -195.304 403.38
+rot 0 -1 0 1
+ponyData BkJhZ2VscwMDAAAAAAAAAAAAAAAADg4ODREWdk4W/740xxoZBAAFAAAAAADYG4E/L38=
+questId 104
+questName Bagels
+questDescr Bagels
+
+# Quest commands
+say Beat it, if ya know what's good for ya!
+end

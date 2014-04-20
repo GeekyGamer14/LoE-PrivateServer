@@ -1,0 +1,13 @@
+# Metadata
+name Vogue Sharp
+questName Vogue Sharp
+questDescr Vogue Sharp
+questId 114
+scene PonyVille
+pos 49.686 -173.934 53.1375
+rot 0 0.6 0 1
+ponyData C1ZvZ3VlIFNoYXJwAgPLAAAAAAAAAAAAAADtUYf/QuX/r4r/DJ6fLD0NAA0AAQAAAAOrfj9bjA==
+
+# Quest commands
+say G'day
+end

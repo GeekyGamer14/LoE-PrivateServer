@@ -1,0 +1,14 @@
+# Metadata
+name Maplesweet
+questName Maplesweet
+questDescr Maplesweet
+questId 117
+scene PonyVille
+pos 3.57649 -195.304 220.917
+rot 0 -1 0 1
+wear 19
+ponyData Ck1hcGxlc3dlZXQBAgAAAAAAAAAAAAAAAMx6UMx6UPHTml43EklitAgAAAAAAAAA9iOAPzyD
+
+# Quest commands
+say Oh, hello.
+end

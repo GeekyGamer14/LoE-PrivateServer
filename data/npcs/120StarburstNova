@@ -1,0 +1,14 @@
+# Metadata
+name Starburst Nova
+questName Starburst Nova
+questDescr Starburst Nova
+questId 120
+scene Canterlot
+pos -66.5061 0.0314512 174.227
+rot 0 3 0 -1
+ponyData DlN0YXJidXJzdCBOb3ZhAgAAAAAAAAAAAAAAAACHZ+KHZ+LPp+0A4v/MjdEJAAkAAAAAACuwdz8Ieg==
+
+# Quest commands
+say Alright class, settle down. We have some wonderful work to do!
+say If you're looking for books, there are two libraries right here in Cantermore, and another in Ponydale!
+end

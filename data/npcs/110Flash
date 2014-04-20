@@ -1,0 +1,13 @@
+# Metadata
+name Flash
+scene Cloudsdale
+pos 58.5769 46.5408 81.6078
+rot 0 -1 0 1
+ponyData BUZsYXNoAwIAAAAAAAAAAAAAAAB+TDLGpzLw9P9Vk9P8//ADAAkAAAAAANMCgD8Fhg==
+questId 110
+questName Flash
+questDescr Flash
+
+# Quest commands
+say I like to sit on clouds.
+end

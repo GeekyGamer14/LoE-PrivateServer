@@ -1,0 +1,14 @@
+# Metadata
+name Bright Spark
+questName Bright Spark
+questDescr Bright Spark
+questId 119
+scene Canterlot
+pos -95.8812 0.0314512 182.135
+rot 0 3 0 -1
+wear 63
+ponyData DEJyaWdodCBTcGFyawIAAAAAAAAAAAAAAAAAvUbb4IMq//r6AKH/zI3RCQAJAAEAAAArsHc/ZmY=
+
+# Quest commands
+say I'm really enjoying my lessons, Flamel certainly knows how to teach.
+end

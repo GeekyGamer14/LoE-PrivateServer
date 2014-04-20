@@ -1,0 +1,13 @@
+# Metadata
+name Marvell
+scene RaritysBoutique
+pos 28.4694 -1.16836 -51.6508
+rot 0 2.5 0 1
+ponyData B01hcnZlbGwBAwAAAAAAAAAAAAAAALWukrWukqijw7Wvk4k5Yg0ACQABAAAAYs2EP95q
+questId 109
+questName Marvell
+questDescr Marvell
+
+# Quest commands
+say Your clothe are an expression of who you are--how you see yourself and how you want to be seen.
+end

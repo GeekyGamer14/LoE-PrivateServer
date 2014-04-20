@@ -1,0 +1,14 @@
+# Metadata
+name Star Beam
+questName Star Beam
+questDescr Star Beam
+questId 123
+scene Canterlot
+pos -42.3199 33.0917 198.201
+rot 0 0 0 1
+wear 58
+ponyData CVN0YXIgQmVhbQICAAAAAAAAAAAAAAAAyxQiyxQi8tCyMG//MZbRBAAFAAAAAAD6Z34/Ons=
+
+# Quest commands
+say Sometimes you've got to check all the nooks and crannies for useful stuff.
+end

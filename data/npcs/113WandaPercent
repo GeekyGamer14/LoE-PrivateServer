@@ -1,0 +1,13 @@
+# Metadata
+name Wanda Percent
+questName Wanda Percent
+questDescr Wanda Percent
+questId 113
+scene PonyVille
+pos 52.0391 -173.934 54.5554
+rot 0 -1.7 0 1
+ponyData DVdhbmRhIFBlcmNlbnQBAsgAAAAAAAAAAAAAAKXxUUTDAPXgU+MlhZpGow8ADwABAAAA0oKAP/KD
+
+# Quest commands
+say Hi
+end

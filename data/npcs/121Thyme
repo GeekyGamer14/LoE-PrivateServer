@@ -1,0 +1,14 @@
+# Metadata
+name Thyme
+questName Thyme
+questDescr Thyme
+questId 121
+scene Canterlot
+pos -41.6586 0.0305164 178.593
+rot 0 3 0 -1
+ponyData BVRoeW1lAgGZAAAAAAAAAAAAAABMgD1MgD3hvXEAvf9hiGQAAA0AAAAAAG0NgT+gcg==
+
+# Quest commands
+say Hey there!
+say Some ponies might view me as a hoarder, I just view myself as a collector of curiosities
+end

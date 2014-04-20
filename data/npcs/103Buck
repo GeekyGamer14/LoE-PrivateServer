@@ -1,0 +1,13 @@
+# Metadata
+name Buck
+scene PonyVille
+pos -60.078 -193.445 130.551
+rot 0 1 0 1
+ponyData BEJ1Y2sBAwAAAAAAAAAAAAAAAA4ODg0RFscaGTMzM8caGQQABQAAAAAA2BuBPy9/
+questId 103
+questName Buck
+questDescr Buck
+
+# Quest commands
+say Shove off, loser!
+end

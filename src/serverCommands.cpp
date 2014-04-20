@@ -25,13 +25,15 @@ void Widget::sendCmdLine()
         str = str.right(str.size()-4);
         for (int i=0; i<win.udpPlayers.size(); i++)
         {
-            sendChatMessage(win.udpPlayers[i], "[Chatnone] "+str, "[Server]", ChatNone);
-            sendChatMessage(win.udpPlayers[i], "[Chatuntyped] "+str, "[Server]", ChatUntyped);
-            sendChatMessage(win.udpPlayers[i], "[Chatguild] "+str, "[Server]", ChatGuild);
-            sendChatMessage(win.udpPlayers[i], "[Chatparty] "+str, "[Server]", ChatParty);
-            sendChatMessage(win.udpPlayers[i], "[Chatsystem] "+str, "[Server]", ChatSystem);
-            sendChatMessage(win.udpPlayers[i], "[Chatwhisper] "+str, "[Server]", ChatWhisper);
-            sendChatMessage(win.udpPlayers[i], "[Chatlocal] "+str, "[Server]", ChatLocal);
+            // aaand we send it in every channel because its really
+            // really important.
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatNone);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatUntyped);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatGuild);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatParty);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatSystem);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatWhisper);
+            sendChatMessage(win.udpPlayers[i], str, "[Broadcast]", ChatLocal);
         }
         win.logMessage("[Server] "+str);
         return;

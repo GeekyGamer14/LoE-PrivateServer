@@ -1,0 +1,82 @@
+# Metadata
+name Spud
+scene SweetAppleAcres
+pos 76.4278 -107.15 -4.78473
+rot 0 1 0 1
+ponyData BFNwdWQBA8oAAAAAAAAAAAAAAL1eWL1eWO2iW+6ZOmuSLwsACwAAAAAA9omAPxx8
+questId 106
+questName Spud
+questDescr Spud
+
+# Jump table
+gotoIfState 2 5 AstralCharmsCarrotExperiment
+gotoIfState 3 5 ACCE-Accepted
+
+# Default state
+say These'll probably be ready to go within the week.
+end
+
+# State 2 quest 5 : Astral Charm sent us talking to Spud
+label AstralCharmsCarrotExperiment
+say Hey there, $PLAYERNAME. I was just finishing up here. What can I do for ya? 
+answer ACCE-Explain1 Actually, I'm here on behalf of Astral.
+answer ACCE-Explain2 Did you happen to grow any giant carrots around here lately?
+
+label ACCE-Explain1
+say Then I ain't innarested. She ain't allowed on these premises after that last giant robot-related rumpus. You just tell her I said "no."
+answer ACCE-TooLateBro Well, actually, she already did it. And now I'm supposed to tell you to not sell or eat any giant carrots that grow out here.
+answer ACCE-Explain2 Sure thing. On a completely unrelated subject, did you happen to grow any giant carrots around here lately?
+
+label ACCE-TooLateBro
+say WHAT? Let me just tell you right now that I do NOT respond kindly to that sort of humor. 
+answer ACCE-Accept1 Come on, Spuddyboy! It's me, your old pal, $PLAYERNAME, remember? It's cool. Everything's cool. Please don't hurt me.
+answer ACCE-Accept1 As much as I wish I were kidding, somepony's health might be at stake.
+answer ACCE-Accept2 Watchu gonna do about it?
+
+label ACCE-Accept1
+setQuestState 3 5
+say I sold half of them to Flan this afternoon, and I've got a buyer on the way here right now to look at the rest! You can tell your little friend that if I ever see her around here, she's gonna be studyin' samples of my soil real close-like, you hear? Now you go and talk to Flan right now at the Paso Fino, while I try and figger out a way to maintain any sort of reputation as a businessman with all'a these nosy ponies what ain't worked a day in their lives tryina' come in here and take what doesn't belong to them all day long.
+end
+
+label ACCE-Accept2
+setQuestState 3 5
+say You'd better go talk to Flan. And never come back. 
+end
+
+label ACCE-Explain2
+say So you've heard! Yep, the way them babies came up, you'da' thought for sure I must've used some kind of magic on 'em. Goes to show that hard work and sweat is always going to pay off in the end, don't it? I've seen 'em big at the fairs and such before, but I never thought it'd happen to mine! 
+answer ACCE-Explain3 Actually, I don't think you should eat those.
+
+label ACCE-Explain3
+say I don't plan to eat 'em. I'm gonna sell 'em. I might keep one, but I've already sold half of the harvest to Flan, and I've got another buyer on his way over right now to take the rest off my hooves.
+answer ACCE-Explain4 You can't let anypony eat those! They might all get sick!
+
+label ACCE-Explain4
+say Do you know something I don't? 
+answer ACCE-Accept3 Astral was running some kind of experiment to make your carrots bigger. She says a side-effect has popped up, and it could make ponies really sick.
+answer ACCE-Explain5 No, I just think you shouldn't trust any vegetables that unusually large. Somepony probably magicked all over them or something.
+
+label ACCE-Accept3
+setQuestState 3 5
+say Go to the Paso Fino Cafe in Canterlot, and tell Flan not to use the carrots I gave her. Right now. If you really want to do me a favor, take Astral with you and lock her in the freezer when nopony's looking. Maybe that'd buy me enough time to undo the damage without something else goin' wrong. Don't you come back here. 
+end
+
+label ACCE-Explain5
+say You might have a point. I should probably try one myself before I go giving them out. Make sure nothin' funny happens. 
+answer ACCE-Explain6 I don't think that's a good idea. You should get rid of them because... they might come alive and start attacking ponies!
+answer ACCE-Accept4 Actually, wait. Astral was running experiments on these carrots. They might not be safe to eat.
+
+label ACCE-Explain6
+say Don't lie to me. 
+answer ACCE-Accept4 ... Astral did it. She was just trying to help.
+
+label ACCE-Accept4
+setQuestState 3 5
+say Next time, just tell me without tryin' to cover her up. I don't like having my intelligence insulted. Now, you run on down to the Paso Fino in Canterlot right now and tell Flan what ya' told me, and I'll take care of the ones I got left. But I don't ever want to see Astral step hoof on this farm again, and I intend to enforce that if necessary. While y'all are out there playing yer little games, I'm over here tryin' to make a living, and now I've got to explain to my other buyer that he's wastin' a trip down here on account o' some mad scientist hogwash that he prolly ain't even gonna believe, and there ain't a thing in the world that I can do 'bout that except keep workin' harder to make up for it, even though I'm the one who's been doin' what I'm supposed to be doin' this whole time. You'd better be movin' along. 
+end
+
+# State 3 quest 5 : We need to go talk to Flan
+label ACCE-Accepted
+say Flan is at the Paso Fino Cafe in Canterlot. That's where you're goin'. 
+end
+

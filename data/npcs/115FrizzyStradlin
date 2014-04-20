@@ -1,0 +1,13 @@
+# Metadata
+name Frizzy Stradlin
+questName Frizzy Stradlin
+questDescr Frizzy Stradlin
+questId 115
+scene PonyVille
+pos -322.284 -195.303 280.719
+rot 0 -1 0 0
+ponyData D0ZyaXp6eSBTdHJhZGxpbgEAAAAAAAAAAAAAAAAA3kMt3kMt76R4ZaQ0sC6ZCwAFAAAAAACjy3c/oII=
+
+# Quest commands
+say Throw yourself into learning and never be afraid to take risks. You migh fail sometimes, but you'll be a better pony for it.
+end

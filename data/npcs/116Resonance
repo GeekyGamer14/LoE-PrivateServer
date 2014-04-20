@@ -1,0 +1,13 @@
+# Metadata
+name Resonance
+questName Resonance
+questDescr Resonance
+questId 116
+scene PonyVille
+pos -61.2775 -195.304 390.096
+rot 0 0.3 0 1
+ponyData CVJlc29uYW5jZQICoQAAAAAAAAAAAAAAQ2zd/ynN/9MAtQX/2cg/CQAFAAEAAADnY4I/33o=
+
+# Quest commands
+say I'm very good at predicting things. I could have been a fortune teller, but I very much enjoy watching ponies figure things out for themselves.
+end

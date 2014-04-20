@@ -1,0 +1,13 @@
+# Metadata
+name Taffy Treat
+scene SugarCubeCorner
+pos 28.1526 -0.0566763 -10.3893
+rot 0 -1 0 1
+ponyData C1RhZmZ5IFRyZWF0AgJXAAAAAAAAAAAAAADUb5PTwWSWh6Au3UVqe6AMAAwAAAAAAGJ3ez/Yfw==
+questId 111
+questName Taffy Treat
+questDescr Taffy Treat
+
+# Quest commands
+say Shh! Mixing taffy requires dedication, concentration, and a steady hoof!
+end

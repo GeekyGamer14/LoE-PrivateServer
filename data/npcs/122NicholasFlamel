@@ -1,0 +1,14 @@
+# Metadata
+name Nicholas Flamel
+questName Nicholas Flamel
+questDescr Nicholas Flamel
+questId 122
+scene Canterlot
+pos -61.5825 5.34149 184.276
+rot 0 0.2 0 1
+wear 18
+ponyData D05pY2hvbGFzIEZsYW1lbAIDcwAAAAAAAAAAAAAAw5FJw5FJ4Wod/68ySooEAwACAAAAAAAgH4A/JHQ=
+
+# Quest commands
+say Forget everything you know and discover the world for yourself.
+end

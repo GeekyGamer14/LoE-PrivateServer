@@ -1,0 +1,111 @@
+# Metadata
+name Flan
+scene Canterlot
+pos -94.2147 0.175656 6.23397
+rot 0 3.5 0 1
+ponyData BEZsYW4CAsYAAAAAAAAAAAAAAPTYpt2bRffp0OaRLf///wwAAAABAAAAKkF+P6Z8
+questId 101
+questName Flan
+questDescr Flan
+
+# Jump table
+gotoIfState 3 5 ACCE-start
+gotoIfState 4 5 ACCE-Accepted
+
+# Default
+say It really is a beautiful city.
+end
+
+# State 3 quest 5 : Spud sent us talking to Flan
+label ACCE-start
+say Oh, hello, $PLAYERNAME! It's just lovely out here today. How are you enjoying the city? 
+answer ACCE-01 It's beautiful.
+answer ACCE-09 Meh.
+answer ACCE-12 There's no time for that! Did you eat or sell any of the giant carrots you got from Spud?
+
+label ACCE-01
+say The view of the castle from here is just wonderful. I'm lucky Wanda was able to snatch up this plot of land before the cost went up. So, what brings you out here? 
+answer ACCE-02 I was just in the area, and I thought I'd warn you of your impending doom.
+answer ACCE-04 Have you heard the good news?
+answer ACCE-08 Astral was experimenting with the carrots you bought from Spud, and they might not be safe to eat.
+
+label ACCE-02
+say What do you mean? 
+answer ACCE-03 Astral was experimenting with the carrots you bought from Spud, and they might not be safe to eat.
+
+label ACCE-03
+say Oh.. I see. Well, in that case, you'd better let Wanda know right away! She wanted to try one before she headed off to Carousel Boutique to talk to Vogue. She should probably still be there now. She's the only one who's eaten anything so far, thank goodness! 
+answer ACCE-Accept1 What about you?
+answer ACCE-Accept2 Okay, Flan. Thanks for understanding.
+
+label ACCE-Accept1
+setQuestState 4 5
+say Well, I've got to get rid of that batch and buy some more carrots. Preferably before any customers show up. But thanks for letting me know, anyway. 
+end
+
+label ACCE-Accept2
+setQuestState 4 5
+end
+
+label ACCE-04
+say I don't think so, but I love good news. What is it? 
+answer ACCE-05 Actually, it's bad news.
+answer ACCE-07 Astral was experimenting with the carrots you bought from Spud, and they might not be safe to eat.
+
+label ACCE-05
+say Oh... um, okay... well, go ahead, then. 
+answer ACCE-06 Astral was experimenting with the carrots you bought from Spud, and they might not be safe to eat.
+
+label ACCE-06
+say Oh.. I see. Well, in that case, you'd better let Wanda know right away! She wanted to try one before she headed off to Carousel Boutique to talk to Vogue. She should probably still be there now. She's the only one who's eaten anything so far, thank goodness! 
+answer ACCE-Accept3 What about you?
+answer ACCE-Accept2 Okay, Flan. Thanks for understanding.
+
+label ACCE-Accept3
+setQuestState 4 5
+say Well, I've got to get rid of that batch and buy some more carrots. Preferably before any customers show up. But thanks for letting me know, anyway. 
+end
+
+label ACCE-07
+say That doesn't sound like good news at all... but you'd better let Wanda know right away! She wanted to try one before she headed off to Carousel Boutique to talk to Vogue. She should probably still be there now. She's the only one who's eaten anything so far, thank goodness! 
+answer ACCE-Accept3 What about you?
+answer ACCE-Accept2 Okay, Flan. Thanks for understanding.
+
+label ACCE-08
+say Oh.. I see. Well, in that case, you'd better let Wanda know right away! She wanted to try one before she headed off to Carousel Boutique to talk to Vogue. She should probably still be there now. She's the only one who's eaten anything so far, thank goodness! 
+answer ACCE-Accept3 What about you?
+answer ACCE-Accept2 Okay, Flan. Thanks for understanding.
+
+label ACCE-09
+say Hmhm. Well, the city life isn't for everypony, I suppose. But how have you been?
+answer ACCE-10 Things have been going well.
+answer ACCE-11 Not so great, I'm afraid...
+answer ACCE-08 Actually, I'm here to tell you that Astral was experimenting with the carrots you bought from Spud, and they might not be safe to eat.
+
+label ACCE-10
+say Glad to hear it. Things have been pretty good on my side, too. I've gotten a fresh batch of these huge carrots from Spud's farm that I'm going to use to make carrot cakes. You have to see them to believe them! They're about the size of your head! 
+answer ACCE-08 Actually, that's what I'm here to talk to you about. You can't sell those. They could be dangerous. Astral was messing with them, and that's why they got so big.
+
+label ACCE-11
+say Aww, I'm sorry to hear that. What's the matter? 
+answer ACCE-08 Well, I'm trying to warn everypony that Astral was experimenting on Spud's carrots to make them as big as they got, but there's a certain side-effect that makes them too dangerous to let anypony eat them.
+
+label ACCE-12
+say Oh my. Well, um, no, not yet. I was just about to make some carrot cakes, but I haven't used them yet at all. Wanda tried one, but other than that, nopony's eaten any. 
+answer ACCE-Accept4 Then I must warn Wanda! Don't let anypony eat those carrots!
+answer ACCE-13 Where can I find her?
+
+label ACCE-Accept4
+setQuestState 4 5
+say Um, okay. Well... bye, then.
+end
+
+label ACCE-13
+say She's probably still over at Carousel Boutique in Ponyville. She went to talk to Vogue. Um, are the carrots... bad or something? 
+answer ACCE-Accept4 Yes. Don't eat them.
+answer ACCE-Accept4 They might make you sick if you eat any. You can't sell them.
+
+# State 4 quest 5 : We need to talk to Wanda
+label ACCE-Accepted
+say I really think you should hurry down to Carousel Boutique. Wanda's health could be at stake. Apparently. 
+end
