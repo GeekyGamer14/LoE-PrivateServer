@@ -1,7 +1,9 @@
 Legends of Equestria Private Server
 ===================================
 
-iQuestria Private server, original project from GitHub user tux3. You can see the original repo <a href="https://github.com/tux3/LoE-PrivateServer">here</a>.
+This is an open source Private Server for the game Legends of Equestria, to play even when the official servers are closed.
+The official release is for Windows (x86 and x64). The server should work on Linux and Mac too, but you'll need to compile it yourself.<br/>
+<h5><b><a href="https://github.com/tux3/LoE-PrivateServer/releases">Downloads</a></b></h5>
 
 <h3>How to use</h3>
 Extract in the Legends of Equestria folder, start PrivateServer.exe and the game. 
@@ -36,8 +38,8 @@ You can find more informations on how to create/edit quests in the file QuestScr
 You don't need any of those commands to play, but they might be usefull.
 setPeer is used to select a client. Most commands will only act on the selected client.
 For example if you're stuck, do setPeer with your IP and port, then do for example "load PonyVille".
-- say message: Broadcasts `message` in the chat as [Server]
 - stop : Stops the server and exit.
+- say message: Says `message` as [Server]
 - clear : Clears the server's log.
 - listPeers : Give the list of all the clients (= other players) connected
 - setPeer : If there's only 1 client, select him for the other commands. If there's more than 1, use "setPeer IP port".
