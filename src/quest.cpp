@@ -9,7 +9,7 @@ Quest::Quest(QString path, Player *Owner)
     QFile file(path);
     if (!file.open(QFile::ReadOnly))
     {
-        win.logMessage("Error reading quest DB.");
+        win.logMessage("Error reading quest DB.", sysTag);
         win.stopServer();
         throw std::exception();
     }
@@ -106,7 +106,7 @@ Quest::Quest(QString path, Player *Owner)
     }
     catch (QString& error)
     {
-        win.logMessage(error);
+        win.logMessage(error, sysTag);
         win.stopServer();
     }
 }
@@ -133,7 +133,7 @@ int Quest::findLabel(QString label)
 void Quest::logError(QString message)
 {
     win.logMessage("Error running quest script "+QString().setNum(id)
-                   +", eip="+QString().setNum(eip)+" : "+message);
+                   +", eip="+QString().setNum(eip)+" : "+message, sysTag);
 }
 
 void Quest::setOwner(Player* Owner)
@@ -159,7 +159,7 @@ bool Quest::doCommand(int commandEip)
 {
     if (!owner)
     {
-        win.logMessage("Quest::doCommand called with no owner");
+        win.logMessage("Quest::doCommand called with no owner", sysTag);
         return false;
     }
 

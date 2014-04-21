@@ -3,18 +3,18 @@
 #include "message.h"
 #include "utils.h"
 #include "serialize.h"
-
 // Processes the commands entered directly in the server, not the chat messages
 void Widget::sendCmdLine()
 {
     if (!enableGameServer)
     {
-        logMessage("This is not a game server, commands are disabled");
+        logMessage("This is not a game server, commands are disabled", sysTag);
+        // FUCK TAGGING ALL OF THESE LOG MESSAGES IS GOING TO TAKE FOREVER
         return;
     }
 
     QString str = ui->cmdLine->text();
-    win.logMessage("> "+str);
+    win.logMessage("> "+str, sysTag);
     ui->cmdLine->setText("");
 
     if (str == "clear")
@@ -102,7 +102,7 @@ void Widget::sendCmdLine()
     }
     else if (str.startsWith("listPeers"))
     {
-        win.logMessage("Current peers:");
+        win.logMessage("Current peers:", sysTag);
         if (str.size()<=10)
         {
             for (int i=0; i<win.udpPlayers.size();i++)
@@ -116,7 +116,7 @@ void Widget::sendCmdLine()
         str = str.right(str.size()-10);
         Scene* scene = findScene(str);
         if (scene->name.isEmpty())
-            win.logMessage("Can't find scene");
+            win.logMessage("Can't find scene", udpTag);
         else
             for (int i=0; i<scene->players.size();i++)
                 win.logMessage(win.udpPlayers[i]->IP
@@ -128,7 +128,7 @@ void Widget::sendCmdLine()
     {
         for (int i=0; i<scenes.size(); i++)
         {
-            win.logMessage("Scene "+scenes[i].name);
+            win.logMessage("Scene "+scenes[i].name, sysTag);
             for (int j=0; j<scenes[i].vortexes.size(); j++)
                 win.logMessage("Vortex "+QString().setNum(scenes[i].vortexes[j].id)
                                +" to "+scenes[i].vortexes[j].destName+" "
@@ -166,7 +166,7 @@ void Widget::sendCmdLine()
         QStringList args = str.split(' ');
         if (args.size() != 2)
         {
-            logStatusMessage("Error: Usage is tele ponyIdToMove destinationPonyId");
+            logStatusMessage("Error: Usage is tele ponyIdToMove destinationPonyId", sysTag);
             return;
         }
         bool ok;
@@ -177,7 +177,7 @@ void Widget::sendCmdLine()
         Player* sourcePeer;
         if (!ok && !ok1)
         {
-            logStatusMessage("Error: Usage is tele ponyIdToMove destinationPonyId");
+            logStatusMessage("Error: Usage is tele ponyIdToMove destinationPonyId", sysTag);
             return;
         }
         for (int i=0; i<udpPlayers.size();i++)
@@ -191,7 +191,7 @@ void Widget::sendCmdLine()
         }
         if (!ok2)
         {
-            logStatusMessage("Error: Source peer does not exist!");
+            logStatusMessage("Error: Source peer does not exist!", udpTag);
             return;
         }
         for (int i=0; i<udpPlayers.size();i++)
@@ -210,11 +210,11 @@ void Widget::sendCmdLine()
                 return;
             }
         }
-        logMessage("Error: Destination peer does not exist!");
+        logMessage("Error: Destination peer does not exist!", udpTag);
     }
     if (cmdPeer->IP=="")
     {
-        logMessage("Select a peer first with setPeer/listPeers");
+        logMessage("Select a peer first with setPeer/listPeers", sysTag);
         return;
     }
     else // Refresh peer info
@@ -230,7 +230,7 @@ void Widget::sendCmdLine()
     // User commands from now on (requires setPeer)
     if (str.startsWith("disconnect"))
     {
-        logMessage(QString("[UDP] Disconnecting"));
+        logMessage(QString("[UDP] Disconnecting"), udpTag);
         sendMessage(cmdPeer,MsgDisconnect, "Connection closed by the server admin");
         Player::disconnectPlayerCleanup(cmdPeer); // Save game and remove the player
     }
@@ -243,18 +243,18 @@ void Widget::sendCmdLine()
     {
         logMessage(QString("Pos : x=") + QString().setNum(cmdPeer->pony.pos.x)
                    + ", y=" + QString().setNum(cmdPeer->pony.pos.y)
-                   + ", z=" + QString().setNum(cmdPeer->pony.pos.z));
+                   + ", z=" + QString().setNum(cmdPeer->pony.pos.z), sysTag);
     }
     else if (str.startsWith("getRot"))
     {
         logMessage(QString("Rot : x=") + QString().setNum(cmdPeer->pony.rot.x)
                    + ", y=" + QString().setNum(cmdPeer->pony.rot.y)
                    + ", z=" + QString().setNum(cmdPeer->pony.rot.z)
-                   + ", w=" + QString().setNum(cmdPeer->pony.rot.w));
+                   + ", w=" + QString().setNum(cmdPeer->pony.rot.w), sysTag);
     }
     else if (str.startsWith("getPonyData"))
     {
-        logMessage("ponyData : "+cmdPeer->pony.ponyData.toBase64());
+        logMessage("ponyData: "+cmdPeer->pony.ponyData.toBase64(), sysTag);
     }
     else if (str.startsWith("sendPonies"))
     {
@@ -280,7 +280,7 @@ void Widget::sendCmdLine()
             sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
         }
         else
-            logStatusMessage("Error : Player ID is a number");
+            logStatusMessage("Error : Player ID is a number", sysTag);
     }
     else if (str.startsWith("reloadNpc"))
     {
@@ -306,7 +306,7 @@ void Widget::sendCmdLine()
                 quests << *quest;
                 npcs << quest->npc;
             }
-            logMessage("Loaded "+QString().setNum(nQuests)+" quests/npcs.");
+            logMessage("Loaded "+QString().setNum(nQuests)+" quests/npcs.", sysTag);
 
             // Resend the NPC if needed
             if (npc->sceneName.toLower() == cmdPeer->pony.sceneName.toLower())
@@ -316,7 +316,7 @@ void Widget::sendCmdLine()
             }
         }
         else
-            logMessage("NPC not found");
+            logMessage("NPC not found", sysTag);
     }
     else if (str.startsWith("remove"))
     {
@@ -332,7 +332,7 @@ void Widget::sendCmdLine()
             sendMessage(cmdPeer,MsgUserReliableOrdered6,data);
         }
         else
-            logStatusMessage("Error : Remove needs the id of the view to remove");
+            logStatusMessage("Error: Remove needs the id of the view to remove", sysTag);
     }
     else if (str.startsWith("sendPonyData"))
     {
@@ -349,7 +349,7 @@ void Widget::sendCmdLine()
         QStringList args = str.split(' ');
         if (args.size() != 2)
         {
-            logStatusMessage("Error : usage is setState StatID StatValue");
+            logStatusMessage("Error: usage is setState StatID StatValue", sysTag);
             return;
         }
         bool ok,ok2;
@@ -357,7 +357,7 @@ void Widget::sendCmdLine()
         float statValue = args[1].toFloat(&ok2);
         if (!ok || !ok2)
         {
-            logStatusMessage("Error : usage is setState StatID StatValue");
+            logStatusMessage("Error: usage is setState StatID StatValue", sysTag);
             return;
         }
         sendSetStatRPC(cmdPeer, statID, statValue);
@@ -368,7 +368,7 @@ void Widget::sendCmdLine()
         QStringList args = str.split(' ');
         if (args.size() != 2)
         {
-            logStatusMessage("Error : usage is setMaxStat StatID StatValue");
+            logStatusMessage("Error: usage is setMaxStat StatID StatValue", sysTag);
             return;
         }
         bool ok,ok2;
@@ -376,7 +376,7 @@ void Widget::sendCmdLine()
         float statValue = args[1].toFloat(&ok2);
         if (!ok || !ok2)
         {
-            logStatusMessage("Error : usage is setMaxState StatID StatValue");
+            logStatusMessage("Error: usage is setMaxState StatID StatValue", sysTag);
             return;
         }
         sendSetMaxStatRPC(cmdPeer, statID, statValue);
@@ -396,7 +396,7 @@ void Widget::sendCmdLine()
 
         if (args.size() != 3 && args.size() != 6 && args.size() != 10)
         {
-            logStatusMessage(QString("Error : Instantiate takes 0,3,6 or 10 arguments").append(str));
+            logStatusMessage(QString("Error: Instantiate takes 0,3,6 or 10 arguments").append(str), sysTag);
             return;
         }
         // Au as au moins les 3 premiers de toute facon
@@ -407,7 +407,7 @@ void Widget::sendCmdLine()
         ownerId = args[2].toUInt(&ok2);
         if (!ok1 || !ok2)
         {
-            logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"));
+            logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"), sysTag);
             return;
         }
         QByteArray params1(4,0);
@@ -427,7 +427,7 @@ void Widget::sendCmdLine()
 
             if (!ok1 || !ok2 || !ok3)
             {
-                logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"));
+                logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"), sysTag);
                 return;
             }
         }
@@ -445,7 +445,7 @@ void Widget::sendCmdLine()
 
             if (!ok1 || !ok2 || !ok3 || !ok4)
             {
-                logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"));
+                logStatusMessage(QString("Error: instantiate key viewId ownerId x1 y1 z1 x2 y2 z2 w2"), sysTag);
                 return;
             }
         }
@@ -476,7 +476,7 @@ void Widget::sendCmdLine()
         str = str.right(str.size()-13);
         QStringList args = str.split(" ", QString::SkipEmptyParts);
         if (args.size() != 2)
-            win.logMessage("setDialogMsg takes two args: dialog and npc name");
+            win.logMessage("Error: setDialogMsg takes two args: dialog and npc name", sysTag);
         else
         {
             QByteArray data(1,0);
@@ -523,7 +523,7 @@ void Widget::sendCmdLine()
         for (const Quest& quest : cmdPeer->pony.quests)
         {
             win.logMessage("Quest "+QString().setNum(quest.id)+" ("+*(quest.name)
-                           +"): "+QString().setNum(quest.state));
+                           +"): "+QString().setNum(quest.state), sysTag);
         }
     }
     else if (str==("listInventory"))
@@ -531,14 +531,14 @@ void Widget::sendCmdLine()
         for (const InventoryItem& item : cmdPeer->pony.inv)
         {
             win.logMessage("Item "+QString().setNum(item.id)+" (pos "+QString().setNum(item.index)
-                           +"): "+QString().setNum(item.amount));
+                           +"): "+QString().setNum(item.amount), sysTag);
         }
     }
     else if (str==("listWorn"))
     {
         for (const WearableItem& item : cmdPeer->pony.worn)
         {
-            win.logMessage("Item "+QString().setNum(item.id)+": slot "+QString().setNum(item.index));
+            win.logMessage("Item "+QString().setNum(item.id)+": slot "+QString().setNum(item.index), sysTag);
         }
     }
 }

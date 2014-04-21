@@ -124,7 +124,7 @@ bool Player::savePlayers(QList<Player*>& playersData)
     QFile playersFile("data/players/players.dat");
     if (!playersFile.open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
-        win.logStatusMessage("Error saving players database");
+        win.logStatusMessage("Error saving players database", sysTag);
         win.stopServer();
         return false;
     }
@@ -146,14 +146,14 @@ QList<Player*> Player::loadPlayers()
     QFile playersFile("data/players/players.dat");
     if (!playersFile.open(QIODevice::ReadOnly))
     {
-        win.logStatusMessage("Error reading players database");
+        win.logStatusMessage("Error reading players database", sysTag);
         win.stopServer();
         return players;
     }
     QList<QByteArray> data = playersFile.readAll().split('\n');
     if (data.size()==1 && data[0].isEmpty())
     {
-        win.logMessage("Player database is empty. Continuing happily");
+        win.logMessage("Player database is empty. Continuing happily", sysTag);
         return players;
     }
     for (int i=0;i<data.size();i++)
@@ -161,7 +161,7 @@ QList<Player*> Player::loadPlayers()
         QList<QByteArray> line = data[i].split('\31');
         if (line.size()!=2)
         {
-            win.logStatusMessage("Error reading players database");
+            win.logStatusMessage("Error reading players database", sysTag);
             win.stopServer();
             return players;
         }
@@ -170,7 +170,7 @@ QList<Player*> Player::loadPlayers()
         newPlayer->passhash = line[1];
         players << newPlayer;
     }
-    win.logMessage(QString("Got ")+QString().setNum(players.size())+" players in database");
+    win.logMessage(QString("Got ")+QString().setNum(players.size())+" players in database", sysTag);
     return players;
 }
 
@@ -212,7 +212,7 @@ Player* Player::findPlayer(QList<Player*>& players, quint16 netviewId)
 
 void Player::savePonies(Player *player, QList<Pony> ponies)
 {
-    win.logMessage("UDP: Saving ponies for "+QString().setNum(player->pony.netviewId)+" ("+player->name+")");
+    win.logMessage("UDP: Saving ponies for "+QString().setNum(player->pony.netviewId)+" ("+player->name+")", sysTag);
 
     QDir playerPath(QDir::currentPath());
     playerPath.cd("data");
@@ -321,7 +321,7 @@ void Player::disconnectPlayerCleanup(Player* player)
 
     Scene* scene = findScene(player->pony.sceneName);
     if (scene->name.isEmpty())
-        win.logMessage("UDP: Can't find scene for player cleanup");
+        win.logMessage("UDP: Can't find scene for player cleanup", udpTag);
 
     //win.logMessage("playerCleanup locking");
     playerCleanupMutex.lock();
@@ -342,14 +342,14 @@ void Player::udpResendLast()
     //win.logMessage("udpResendLast locking");
     if (!udpSendReliableMutex.tryLock())
     {
-        win.logMessage("udpResendLast failed to lock.");
+        win.logMessage("udpResendLast failed to lock.", udpTag);
         return; // Avoid deadlock if sendMessage just locked but didn't have the time to stop the timers
     }
     //udpSendReliableMutex.lock();
     QByteArray msg = udpSendReliableQueue.first();
     if (msg.isEmpty())
     {
-        win.logMessage("udpResendLast: Empty message");
+        win.logMessage("udpResendLast: Empty message", udpTag);
         udpSendReliableTimer->start();
         //win.logMessage("udpResendLast unlocking");
         udpSendReliableMutex.unlock();
@@ -376,12 +376,12 @@ void Player::udpResendLast()
 
     if (win.udpSocket->writeDatagram(msg,QHostAddress(IP),port) != msg.size())
     {
-        win.logMessage("UDP: Error sending last message");
-        win.logStatusMessage("Restarting UDP server ...");
+        win.logMessage("UDP: Error sending last message", udpTag);
+        win.logStatusMessage("Restarting UDP server...", udpTag);
         win.udpSocket->close();
         if (!win.udpSocket->bind(win.gamePort, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
         {
-            win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort));
+            win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort), udpTag);
             win.stopServer();
             return;
         }
@@ -398,12 +398,12 @@ void Player::udpDelayedSend()
     //win.logMessage("udpDelayedSend locking");
     if (!udpSendReliableMutex.tryLock())
     {
-        win.logMessage("udpDelayedSend failed to lock.");
+        win.logMessage("udpDelayedSend failed to lock.", udpTag);
         return; // Avoid deadlock if sendMessage just locked but didn't have the time to stop the timers
     }
     //udpSendReliableMutex.lock();
 #if DEBUG_LOG
-    win.logMessage("Sending delayed grouped message : "+QString(udpSendReliableGroupBuffer.toHex()));
+    win.logMessage("Sending delayed grouped message : "+QString(udpSendReliableGroupBuffer.toHex()), udpTag);
 #endif
 
     // Move the grouped message to the reliable queue
@@ -431,12 +431,13 @@ void Player::udpDelayedSend()
 
         if (win.udpSocket->writeDatagram(udpSendReliableGroupBuffer,QHostAddress(IP),port) != udpSendReliableGroupBuffer.size())
         {
-            win.logMessage("UDP: Error sending last message");
-            win.logStatusMessage("Restarting UDP server ...");
+            win.logMessage("UDP: Error sending last message", udpTag);
+            win.logStatusMessage("Restarting UDP server...", udpTag);
+            // why did i ever add tagging this is hard im only 1/4 of the way there
             win.udpSocket->close();
             if (!win.udpSocket->bind(win.gamePort, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
             {
-                win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort));
+                win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort), udpTag);
                 win.stopServer();
                 return;
             }
@@ -454,7 +455,7 @@ void Player::udpDelayedSend()
 
 void Pony::saveQuests()
 {
-    win.logMessage("UDP: Saving quests for "+QString().setNum(netviewId)+" ("+owner->name+")");
+    win.logMessage("UDP: Saving quests for "+QString().setNum(netviewId)+" ("+owner->name+")", udpTag);
 
     QDir playerPath(QDir::currentPath());
     playerPath.cd("data");
@@ -464,7 +465,7 @@ void Pony::saveQuests()
     QFile file(QDir::currentPath()+"/data/players/"+owner->name.toLatin1()+"/quests.dat");
     if (!file.open(QIODevice::ReadWrite))
     {
-        win.logMessage("Error saving quests for "+QString().setNum(netviewId)+" ("+owner->name+")");
+        win.logMessage("Error saving quests for "+QString().setNum(netviewId)+" ("+owner->name+")", udpTag);
         return;
     }
     QByteArray questData = file.readAll();
@@ -506,7 +507,7 @@ void Pony::saveQuests()
 
 void Pony::loadQuests()
 {
-    win.logMessage("UDP: Loading quests for "+QString().setNum(netviewId)+" ("+owner->name+")");
+    win.logMessage("UDP: Loading quests for "+QString().setNum(netviewId)+" ("+owner->name+")", udpTag);
 
     QDir playerPath(QDir::currentPath());
     playerPath.cd("data");
@@ -516,7 +517,7 @@ void Pony::loadQuests()
     QFile file(QDir::currentPath()+"/data/players/"+owner->name.toLatin1()+"/quests.dat");
     if (!file.open(QIODevice::ReadOnly))
     {
-        win.logMessage("Error loading quests for "+QString().setNum(netviewId)+" ("+owner->name+")");
+        win.logMessage("Error loading quests for "+QString().setNum(netviewId)+" ("+owner->name+")", sysTag);
         return;
     }
     QByteArray questData = file.readAll();
@@ -558,7 +559,7 @@ void Pony::loadQuests()
 
 void Pony::saveInventory()
 {
-    win.logMessage("UDP: Saving inventory for "+QString().setNum(netviewId)+" ("+owner->name+")");
+    win.logMessage("UDP: Saving inventory for "+QString().setNum(netviewId)+" ("+owner->name+")", udpTag);
 
     QDir playerPath(QDir::currentPath());
     playerPath.cd("data");
@@ -568,7 +569,7 @@ void Pony::saveInventory()
     QFile file(QDir::currentPath()+"/data/players/"+owner->name.toLatin1()+"/inventory.dat");
     if (!file.open(QIODevice::ReadWrite))
     {
-        win.logMessage("Error saving inventory for "+QString().setNum(netviewId)+" ("+owner->name+")");
+        win.logMessage("Error saving inventory for "+QString().setNum(netviewId)+" ("+owner->name+")", sysTag);
         return;
     }
     QByteArray invData = file.readAll();
@@ -616,7 +617,7 @@ void Pony::saveInventory()
 
 bool Pony::loadInventory()
 {
-    win.logMessage("UDP: Loading inventory for "+QString().setNum(netviewId)+" ("+owner->name+")");
+    win.logMessage("UDP: Loading inventory for "+QString().setNum(netviewId)+" ("+owner->name+")", udpTag);
 
     QDir playerPath(QDir::currentPath());
     playerPath.cd("data");
@@ -626,7 +627,7 @@ bool Pony::loadInventory()
     QFile file(QDir::currentPath()+"/data/players/"+owner->name.toLatin1()+"/inventory.dat");
     if (!file.open(QIODevice::ReadOnly))
     {
-        win.logMessage("Error loading inventory for "+QString().setNum(netviewId)+" ("+owner->name+")");
+        win.logMessage("Error loading inventory for "+QString().setNum(netviewId)+" ("+owner->name+")", sysTag);
         return false;
     }
     QByteArray invData = file.readAll();
@@ -767,14 +768,14 @@ void Pony::unwearItemAt(quint8 index)
     }
     if (!found)
     {
-        win.logMessage("Couldn't unwear item, index "+QString().setNum(index)+" not found");
+        win.logMessage("Couldn't unwear item, index "+QString().setNum(index)+" not found", udpTag);
         return;
     }
     sendUnwearItemRPC(owner, index);
 
     Scene* scene = findScene(sceneName);
     if (scene->name.isEmpty())
-        win.logMessage("UDP: Can't find the scene for unwearItem RPC, aborting");
+        win.logMessage("UDP: Can't find the scene for unwearItem RPC, aborting", udpTag);
     else
     {
         for (Player* dest : scene->players)
@@ -797,7 +798,7 @@ bool Pony::tryWearItem(quint8 invSlot)
             itemSlots = win.wearablePositionsMap[id];
             if (wornSlots & itemSlots)
             {
-                win.logMessage("Can't wear item : slots occupied");
+                win.logMessage("Can't wear item: slots occupied", udpTag);
                 return false;
             }
 
@@ -811,7 +812,8 @@ bool Pony::tryWearItem(quint8 invSlot)
     }
     if (id == (uint32_t)-1)
     {
-        win.logMessage("Index not found");
+        // wtf?
+        win.logMessage("Index not found", sysTag);
         return false;
     }
     wornSlots |= itemSlots;
@@ -825,7 +827,7 @@ bool Pony::tryWearItem(quint8 invSlot)
 
     Scene* scene = findScene(sceneName);
     if (scene->name.isEmpty())
-        win.logMessage("UDP: Can't find the scene for wearItem RPC, aborting");
+        win.logMessage("UDP: Can't find the scene for wearItem RPC, aborting", udpTag);
     else
     {
         for (Player* dest : scene->players)

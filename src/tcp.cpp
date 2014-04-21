@@ -2,7 +2,6 @@
 #include "ui_widget.h"
 #include "message.h"
 #include "utils.h"
-
 #define DEBUG_LOG false
 
 void Widget::tcpConnectClient()
@@ -304,7 +303,7 @@ void Widget::tcpProcessData(QByteArray data, QTcpSocket* socket)
         || !fileAlready.open(QIODevice::ReadOnly) || !fileMaxRegistration.open(QIODevice::ReadOnly)
         || !fileMaxConnected.open(QIODevice::ReadOnly) || !fileServersList.open(QIODevice::ReadOnly))
         {
-            logStatusMessage("Error reading login data files");
+            logStatusMessage("Error reading login data files", tcpTag);
             stopServer();
         }
         else

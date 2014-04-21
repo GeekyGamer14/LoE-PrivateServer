@@ -3,7 +3,6 @@
 #include "widget.h"
 #include "utils.h"
 #include "serialize.h"
-
 void sendMessage(Player* player,quint8 messageType, QByteArray data)
 {
     QByteArray msg(3,0);
@@ -124,7 +123,7 @@ void sendMessage(Player* player,quint8 messageType, QByteArray data)
     }
     else
     {
-        win.logStatusMessage("sendMessage : Unknown message type");
+        win.logStatusMessage("sendMessage: Unknown message type", udpTag);
         return;
     }
 
@@ -132,22 +131,22 @@ void sendMessage(Player* player,quint8 messageType, QByteArray data)
 #if UDP_SIMULATE_PACKETLOSS
     if (qrand() % 100 <= UDP_PERCENT_DROPPED)
     {
-        win.logMessage("UDP: Packet dropped !");
+        win.logMessage("UDP: Packet dropped!", udpTag);
         return;
     }
     else
-        win.logMessage("UDP: Packet got throught");
+        win.logMessage("UDP: Packet got throught", udpTag);
 #endif
 
     if (win.udpSocket->writeDatagram(msg,QHostAddress(player->IP),player->port) != msg.size())
     {
         win.logMessage("UDP: Error sending message to "+QString().setNum(player->pony.netviewId)
-                       +" : "+win.udpSocket->errorString());
-        win.logMessage("Restarting UDP server ...");
+                       +" : "+win.udpSocket->errorString(), udpTag);
+        win.logMessage("Restarting UDP server...", udpTag);
         win.udpSocket->close();
         if (!win.udpSocket->bind(win.gamePort, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
         {
-            win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort));
+            win.logStatusMessage("UDP: Unable to start server on port "+QString().setNum(win.gamePort), udpTag);
             win.stopServer();
             return;
         }

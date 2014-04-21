@@ -2,6 +2,9 @@
 #include "message.h"
 #include "serialize.h"
 #include "utils.h"
+#ifndef chatTag
+#include "tag.h"
+#endif
 
 void Widget::udpProcessPendingDatagrams()
 {

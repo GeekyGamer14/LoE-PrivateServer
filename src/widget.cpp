@@ -5,6 +5,10 @@
 #include "utils.h"
 #include "items.h"
 
+#ifndef chatTag
+#include "tag.h"
+#endif
+
 #if defined _WIN32 || defined WIN32
 #include <windows.h>
 #else
@@ -29,13 +33,13 @@ Widget::Widget(QWidget *parent) :
 
 /// Adds the message in the log, and sets it as the status message
 void Widget::logStatusMessage(QString msg, QString tag){
-    if(tag = udpTag)
+    if(tag == udpTag)
         udpMessages[udpMessageCounter++] = msg;
 
-    if(tag = tcpTag)
+    if(tag == tcpTag)
         tcpMessages[tcpMessageCounter++] = msg;
 
-    if(tag = chatTag)
+    if(tag == chatTag)
         chatMessages[chatMessageCounter++] = msg;
 
     ui->log->appendPlainText(msg);
@@ -46,13 +50,13 @@ void Widget::logStatusMessage(QString msg, QString tag){
 
 /// Adds the message to the log
 void Widget::logMessage(QString msg, QString tag){
-    if(tag = udpTag)
+    if(tag == udpTag)
         udpMessages[udpMessageCounter++] = msg;
 
-    if(tag = tcpTag)
+    if(tag == tcpTag)
         tcpMessages[tcpMessageCounter++] = msg;
 
-    if(tag = chatTag)
+    if(tag == chatTag)
         chatMessages[chatMessageCounter++] = msg;
 
     if (!logInfos)
@@ -64,8 +68,8 @@ void Widget::logMessage(QString msg, QString tag){
 /// Reads the config file (server.ini) and start the server accordingly
 void Widget::startServer()
 {
-    logStatusMessage("iQuestria Private Server v0.5.2-alpha");
-    logStatusMessage("Project adapted from GitHub repo tux3/LoE-PrivateServer");
+    logStatusMessage("iQuestria Private Server v0.5.2-alpha", sysTag);
+    logStatusMessage("Project adapted from GitHub repo tux3/LoE-PrivateServer", sysTag);
 #ifdef __APPLE__
     // this fixes the directory in OSX so we can use the relative CONFIGFILEPATH and etc properly
     CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -84,7 +88,7 @@ void Widget::startServer()
     lastId=1;
 
     /// Read config
-    logStatusMessage("Reading config file ...");
+    logStatusMessage("Reading config file...", sysTag);
     QSettings config(CONFIGFILEPATH, QSettings::IniFormat);
     loginPort = config.value("loginPort", 1031).toInt();
     gamePort = config.value("gamePort", 1039).toInt();
@@ -134,7 +138,7 @@ void Widget::startServer()
             QFile file("data/vortex/"+files[i]);
             if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             {
-                logStatusMessage("Error reading vortex DB");
+                logStatusMessage("Error reading vortex DB", sysTag);
                 return;
             }
             QByteArray data = file.readAll();
@@ -152,8 +156,7 @@ void Widget::startServer()
                 QList<QByteArray> elems = lines[j].split(' ');
                 if (elems.size() < 5)
                 {
-                    logStatusMessage("Vortex DB is corrupted. Incorrect line ("
-                                    +QString().setNum(elems.size())+" elems), file " + files[i]);
+                    logStatusMessage("Vortex DB is corrupted. Incorrect line ("+QString().setNum(elems.size())+" elems), file " + files[i], sysTag);
                     corrupted=true;
                     break;
                 }
@@ -167,7 +170,7 @@ void Widget::startServer()
                 if (!(ok1&&ok2&&ok3&&ok4))
                     // i think its ok now
                 {
-                    logStatusMessage("Vortex DB is corrupted. Conversion failed, file " + files[i]);
+                    logStatusMessage("Vortex DB is corrupted. Conversion failed, file " + files[i], sysTag);
                     corrupted=true;
                     break;
                 }
@@ -186,7 +189,7 @@ void Widget::startServer()
             return;
         }
 
-        logMessage("Loaded " + QString().setNum(nVortex) + " vortexes in " + QString().setNum(scenes.size()) + " scenes");
+        logMessage("Loaded " + QString().setNum(nVortex) + " vortexes in " + QString().setNum(scenes.size()) + " scenes", sysTag);
     }
 
     /// Read/parse Items.xml
@@ -197,11 +200,11 @@ void Widget::startServer()
         {
             QByteArray data = itemsFile.readAll();
             wearablePositionsMap = parseItemsXml(data);
-            win.logMessage("Loaded "+QString().setNum(wearablePositionsMap.size())+" items");
+            win.logMessage("Loaded "+QString().setNum(wearablePositionsMap.size())+" items", sysTag);
         }
         else
         {
-            win.logMessage("Couln't open Items.xml");
+            win.logMessage("Couln't open Items.xml", sysTag);
             stopServer();
             return;
         }
@@ -221,7 +224,7 @@ void Widget::startServer()
                 quests << quest;
                 npcs << quest.npc;
             }
-            logMessage("Loaded "+QString().setNum(nQuests)+" quests/npcs.");
+            logMessage("Loaded "+QString().setNum(nQuests)+" quests/npcs.", sysTag);
         }
         catch (QString& e)
         {
@@ -231,17 +234,17 @@ void Widget::startServer()
 
     if (enableLoginServer)
     {
-//      logStatusMessage("Loading players database ...");
+//      logStatusMessage("Loading players database...", sysTag);
         tcpPlayers = Player::loadPlayers();
     }
 
     // TCP server
     if (enableLoginServer)
     {
-        logStatusMessage("Starting TCP login server on port "+QString().setNum(loginPort)+" ...");
+        logStatusMessage("Starting TCP login server on port "+QString().setNum(loginPort)+"...", sysTag);
         if (!tcpServer->listen(QHostAddress::Any,loginPort))
         {
-            logStatusMessage("TCP: Unable to start server on port "+QString().setNum(loginPort)+": "+tcpServer->errorString());
+            logStatusMessage("TCP: Unable to start server on port "+QString().setNum(loginPort)+": "+tcpServer->errorString(), sysTag);
             stopServer();
             return;
         }
@@ -254,10 +257,10 @@ void Widget::startServer()
     // UDP server
     if (enableGameServer)
     {
-        logStatusMessage("Starting UDP game server on port "+QString().setNum(gamePort)+" ...");
+        logStatusMessage("Starting UDP game server on port "+QString().setNum(gamePort)+"...", sysTag);
         if (!udpSocket->bind(gamePort, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
         {
-            logStatusMessage("UDP: Unable to start server on port "+QString().setNum(gamePort));
+            logStatusMessage("UDP: Unable to start server on port "+QString().setNum(gamePort), sysTag);
             stopServer();
             return;
         }
@@ -273,7 +276,7 @@ void Widget::startServer()
         sync.startSync();
 
     if (enableLoginServer || enableGameServer)
-        logStatusMessage("Server started");
+        logStatusMessage("Server started", sysTag);
 
     connect(ui->sendButton, SIGNAL(clicked()), this, SLOT(sendCmdLine()));
     if (enableLoginServer)
@@ -335,7 +338,7 @@ void Widget::stopServer()
 void Widget::stopServer(bool log)
 {
     if (log)
-        logStatusMessage("Stopping all server operations");
+        logStatusMessage("Stopping all server operations", sysTag);
     pingTimer->stop();
     tcpServer->close();
     for (int i=0;i<tcpClientsList.size();i++)

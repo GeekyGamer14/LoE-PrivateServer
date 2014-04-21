@@ -2,6 +2,9 @@
 #include "character.h"
 #include "widget.h"
 #include "serialize.h"
+#ifndef chatTag
+#include "tag.h"
+#endif
 
 #define DEBUG_LOG false
 
@@ -26,7 +29,7 @@ void sendPonies(Player* player)
     for (int i=0;i<ponies.size();i++)
         data += ponies[i].ponyData;
 
-    win.logMessage(QString("UDP: Sending characters data to ")+QString().setNum(player->pony.netviewId));
+    win.logMessage(QString("UDP: Sending characters data to ")+QString().setNum(player->pony.netviewId), udpTag);
     sendMessage(player, MsgUserReliableOrdered4, data);
 }
 
@@ -37,7 +40,7 @@ void sendEntitiesList(Player *player)
     {
         levelLoadMutex.unlock();
 #if DEBUG_LOG
-        win.logMessage("UDP: Sending ponies list");
+        win.logMessage("UDP: Sending ponies list", udpTag);
 #endif
         sendPonies(player);
         return;
@@ -46,11 +49,11 @@ void sendEntitiesList(Player *player)
     {
         //levelLoadMutex.unlock();
         win.logMessage(QString("UDP: Entities list already sent to ")+QString().setNum(player->pony.netviewId)
-                       +", resending anyway");
+                       +", resending anyway", udpTag);
         //return;
     }
     else // Loading finished, sending entities list
-    win.logMessage(QString("UDP: Sending entities list to ")+QString().setNum(player->pony.netviewId));
+    win.logMessage(QString("UDP: Sending entities list to ")+QString().setNum(player->pony.netviewId), udpTag);
     Scene* scene = findScene(player->pony.sceneName); // Spawn all the players on the client
     for (int i=0; i<scene->players.size(); i++)
         sendNetviewInstantiate(&scene->players[i]->pony, player);
@@ -59,7 +62,7 @@ void sendEntitiesList(Player *player)
     for (int i=0; i<win.npcs.size(); i++)
         if (win.npcs[i]->sceneName.toLower() == player->pony.sceneName.toLower())
         {
-            win.logMessage("UDP: Sending NPC "+win.npcs[i]->name);
+            win.logMessage("UDP: Sending NPC "+win.npcs[i]->name, udpTag);
             sendNetviewInstantiate(win.npcs[i], player);
         }
 
@@ -83,7 +86,7 @@ void sendPonySave(Player *player, QByteArray msg)
 {
     if (player->inGame < 2) // Not supposed to happen, ignoring the request
     {
-        win.logMessage("UDP: Savegame requested too soon by "+QString().setNum(player->pony.netviewId));
+        win.logMessage("UDP: Savegame requested too soon by "+QString().setNum(player->pony.netviewId), udpTag);
         return;
     }
 
@@ -99,7 +102,7 @@ void sendPonySave(Player *player, QByteArray msg)
     // If we found a matching NPC, send him and exits
     if (npc != NULL)
     {
-        win.logMessage("UDP: Sending ponyData and worn items for NPC "+npc->name);
+        win.logMessage("UDP: Sending ponyData and worn items for NPC "+npc->name, udpTag);
         sendPonyData(npc, player);
         //sendWornRPC(npc, player, npc->worn);
         return;
@@ -111,10 +114,10 @@ void sendPonySave(Player *player, QByteArray msg)
         if (player->inGame == 3) // Hopefully that'll fix people stuck on the default cam without creating clones
         {
             win.logMessage("UDP: Savegame already sent to "+QString().setNum(player->pony.netviewId)
-                           +", resending anyway");
+                           +", resending anyway", udpTag);
         }
         else
-            win.logMessage(QString("UDP: Sending pony save for/to ")+QString().setNum(netviewId));
+            win.logMessage(QString("UDP: Sending pony save for/to ")+QString().setNum(netviewId), udpTag);
 
         // Set current/max stats
         sendSetMaxStatRPC(player, 0, 100);
@@ -156,7 +159,7 @@ void sendPonySave(Player *player, QByteArray msg)
     else if (!refresh->IP.isEmpty())
     {
         win.logMessage(QString("UDP: Sending pony save for ")+QString().setNum(refresh->pony.netviewId)
-                       +" to "+QString().setNum(player->pony.netviewId));
+                       +" to "+QString().setNum(player->pony.netviewId), udpTag);
 
         //sendWornRPC(refresh, player, refresh->worn);
 
@@ -172,7 +175,7 @@ void sendPonySave(Player *player, QByteArray msg)
     }
     else
     {
-        win.logMessage("UDP: Error sending pony save : netviewId "+QString().setNum(netviewId)+" not found");
+        win.logMessage("UDP: Error sending pony save : netviewId "+QString().setNum(netviewId)+" not found", udpTag);
     }
 }
 
@@ -193,7 +196,7 @@ void sendNetviewInstantiate(Player *player, QString key, quint16 NetviewId, quin
 
 void sendNetviewInstantiate(Player *player)
 {
-    win.logMessage("UDP: Send instantiate for/to "+QString().setNum(player->pony.netviewId));
+    win.logMessage("UDP: Send instantiate for/to "+QString().setNum(player->pony.netviewId), udpTag);
     QByteArray data(1,1);
     data += stringToData("PlayerBase");
     QByteArray data2(4,0);
@@ -208,13 +211,13 @@ void sendNetviewInstantiate(Player *player)
 
     win.logMessage(QString("Instantiate at ")+QString().setNum(player->pony.pos.x)+" "
                    +QString().setNum(player->pony.pos.y)+" "
-                   +QString().setNum(player->pony.pos.z));
+                   +QString().setNum(player->pony.pos.z), udpTag);
 }
 
 void sendNetviewInstantiate(Pony *src, Player *dst)
 {
     win.logMessage("UDP: Send instantiate for "+QString().setNum(src->netviewId)
-                   +" to "+QString().setNum(dst->pony.netviewId));
+                   +" to "+QString().setNum(dst->pony.netviewId), udpTag);
     QByteArray data(1,1);
     data += stringToData("PlayerBase");
     QByteArray data2(4,0);
@@ -234,7 +237,7 @@ void sendNetviewInstantiate(Pony *src, Player *dst)
 
 void sendNetviewRemove(Player *player, quint16 netviewId)
 {
-    win.logMessage("UDP: Removing netview "+QString().setNum(netviewId)+" to "+QString().setNum(player->pony.netviewId));
+    win.logMessage("UDP: Removing netview "+QString().setNum(netviewId)+" to "+QString().setNum(player->pony.netviewId), udpTag);
 
     QByteArray data(3,2);
     data[1] = (quint8)(netviewId&0xFF);
@@ -422,11 +425,11 @@ void sendPonyData(Pony *src, Player *dst)
 
 void sendLoadSceneRPC(Player* player, QString sceneName) // Loads a scene and send to the default spawn
 {
-    win.logMessage(QString("UDP: Loading scene \"") + sceneName + "\" on "+QString().setNum(player->pony.netviewId));
+    win.logMessage(QString("UDP: Loading scene \"") + sceneName + "\" on "+QString().setNum(player->pony.netviewId), udpTag);
     Vortex vortex = findVortex(sceneName, 0);
     if (vortex.destName.isEmpty())
     {
-        win.logMessage("UDP: Scene not in vortex DB. Aborting scene load.");
+        win.logMessage("UDP: Scene not in vortex DB. Aborting scene load.", udpTag);
         return;
     }
 
@@ -434,7 +437,7 @@ void sendLoadSceneRPC(Player* player, QString sceneName) // Loads a scene and se
     Scene* oldScene = findScene(player->pony.sceneName);
     if (scene->name.isEmpty() || oldScene->name.isEmpty())
     {
-        win.logMessage("UDP: Can't find the scene, aborting");
+        win.logMessage("UDP: Can't find the scene, aborting", udpTag);
         return;
     }
 
@@ -472,13 +475,13 @@ void sendLoadSceneRPC(Player* player, QString sceneName, UVector pos) // Loads a
                            +"\" to "+QString().setNum(player->pony.netviewId)
                            +" at "+QString().setNum(pos.x)+" "
                            +QString().setNum(pos.y)+" "
-                           +QString().setNum(pos.z)));
+                           +QString().setNum(pos.z)), udpTag);
 
     Scene* scene = findScene(sceneName);
     Scene* oldScene = findScene(player->pony.sceneName);
     if (scene->name.isEmpty() || oldScene->name.isEmpty())
     {
-        win.logMessage("UDP: Can't find the scene, aborting");
+        win.logMessage("UDP: Can't find the scene, aborting", udpTag);
         return;
     }
 
@@ -535,7 +538,7 @@ void sendMove(Player* player, float x, float y, float z)
     data += floatToData(x);
     data += floatToData(y);
     data += floatToData(z);
-    win.logMessage(QString("UDP: Moving character"));
+    win.logMessage(QString("UDP: Moving character"), udpTag);
     sendMessage(player,MsgUserReliableOrdered4, data);
 }
 

@@ -26,12 +26,15 @@
 #include "scene.h"
 #include "sync.h"
 #include "quest.h"
-#include "tag.h"
 
 #define PLAYERSPATH "data/players/"
 #define NETDATAPATH "data/netData/"
 #define CONFIGFILEPATH "data/server.ini"
 #define SERVERSLISTFILEPATH "data/serversList.cfg"
+#define sysTag "SYSTEM"
+#define chatTag "CHAT"
+#define udpTag "UDP"
+#define tcpTag "TCP"
 
 namespace Ui {
 class Widget;
@@ -48,6 +51,7 @@ public slots:
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+    // going for the android tag approach for filters, heh.
     void logMessage(QString msg, QString tag);
     void logStatusMessage(QString msg, QString tag);
     void startServer();
@@ -56,12 +60,14 @@ public:
     int getNewNetviewId();
     int getNewId();
     // Filters
-    int udpMessageCounter = 0;
-    QString udpMessages[udpMessageCounter];
-    int chatMessageCounter = 0;
-    QString chatMessages[chatMessageCounter];
-    int tcpMessageCounter = 0;
-    QString tcpMessages[tcpMessageCounter];
+    int udpMessageCounter;
+    QString udpMessages[];
+    int chatMessageCounter;
+    QString chatMessages[];
+    int tcpMessageCounter;
+    QString tcpMessages[];
+    int globalMessageCounter;
+    QString globalMessages[];
 
     /// UDP/TCP
 public slots:

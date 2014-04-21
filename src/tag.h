@@ -6,5 +6,6 @@
 QString tcpTag = "TCP";
 QString udpTag = "TCP";
 QString chatTag = "CHAT";
+QString sysTag = "SYSTEM";
 
 #endif // TAG_H
