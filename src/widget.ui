@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>389</height>
+    <width>375</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,13 +22,6 @@
     <widget class="QPlainTextEdit" name="log">
      <property name="readOnly">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="chatFilter">
-     <property name="text">
-      <string>Chat Messages</string>
      </property>
     </widget>
    </item>
@@ -52,31 +45,71 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="filterText">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="text">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>85</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>85</height>
+      </size>
+     </property>
+     <property name="title">
       <string>Filters</string>
      </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QCheckBox" name="udpFilter">
-     <property name="text">
-      <string>UDP Messages</string>
+     <property name="flat">
+      <bool>false</bool>
      </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QCheckBox" name="tcpFilter">
-     <property name="text">
-      <string>TCP Messages</string>
-     </property>
+     <widget class="QCheckBox" name="chatFilter">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>185</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Chat Messages</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="udpFilter">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>93</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>UDP Messages</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="tcpFilter">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>92</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TCP Messages</string>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>
