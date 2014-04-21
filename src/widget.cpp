@@ -14,6 +14,11 @@
 #else
 #include <sys/time.h>
 #endif
+int udpMessageCounter = 0;
+int chatMessageCounter = 0;
+int tcpMessageCounter = 0;
+int globalMessageCounter = 0;
+QString currentFilter = "GLOBAL";
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -33,37 +38,111 @@ Widget::Widget(QWidget *parent) :
 
 /// Adds the message in the log, and sets it as the status message
 void Widget::logStatusMessage(QString msg, QString tag){
-    if(tag == udpTag)
-        udpMessages[udpMessageCounter++] = msg;
+    if(msg.startsWith("> ")){
+        // basically show commands in all of them
+        udpMessageCounter++;
+        udpMessages[udpMessageCounter] = msg;
+        tcpMessageCounter++;
+        tcpMessages[tcpMessageCounter] = msg;
+        chatMessageCounter++;
+        chatMessages[chatMessageCounter] = msg;
+        ui->log->appendPlainText(msg);
+        ui->log->repaint();
+    }else{
+        if(tag == udpTag)
+            udpMessageCounter++;
+            udpMessages[udpMessageCounter] = msg;
 
-    if(tag == tcpTag)
-        tcpMessages[tcpMessageCounter++] = msg;
+        if(tag == tcpTag)
+            tcpMessageCounter++;
+            tcpMessages[tcpMessageCounter] = msg;
 
-    if(tag == chatTag)
-        chatMessages[chatMessageCounter++] = msg;
+        if(tag == chatTag)
+            chatMessageCounter++;
+            chatMessages[chatMessageCounter] = msg;
+    }
 
-    ui->log->appendPlainText(msg);
-    ui->status->setText(msg);
-    ui->log->repaint();
-    ui->status->repaint();
+    globalMessageCounter++;
+    globalMessages[globalMessageCounter] = msg;
+
+    if(currentFilter == tag || currentFilter == "GLOBAL"){
+        ui->log->appendPlainText(msg);
+        ui->status->setText(msg);
+        ui->log->repaint();
+        ui->status->repaint();
+    }
 }
 
 /// Adds the message to the log
 void Widget::logMessage(QString msg, QString tag){
-    if(tag == udpTag)
-        udpMessages[udpMessageCounter++] = msg;
+    if(msg.startsWith("> ")){
+        // basically show commands in all of them
+        udpMessageCounter++;
+        udpMessages[udpMessageCounter] = msg;
+        tcpMessageCounter++;
+        tcpMessages[tcpMessageCounter] = msg;
+        chatMessageCounter++;
+        chatMessages[chatMessageCounter] = msg;
+        ui->log->appendPlainText(msg);
+        ui->log->repaint();
+    }else{
+        if(tag == udpTag)
+            udpMessageCounter++;
+            udpMessages[udpMessageCounter] = msg;
 
-    if(tag == tcpTag)
-        tcpMessages[tcpMessageCounter++] = msg;
+        if(tag == tcpTag)
+            tcpMessageCounter++;
+            tcpMessages[tcpMessageCounter] = msg;
 
-    if(tag == chatTag)
-        chatMessages[chatMessageCounter++] = msg;
+        if(tag == chatTag)
+            chatMessageCounter++;
+            chatMessages[chatMessageCounter] = msg;
+    }
+
+    globalMessageCounter++;
+    globalMessages[globalMessageCounter] = msg;
 
     if (!logInfos)
         return;
-    ui->log->appendPlainText(msg);
-    ui->log->repaint();
+    if(currentFilter == tag || currentFilter == "GLOBAL"){
+        ui->log->appendPlainText(msg);
+        ui->log->repaint();
+    }
 }
+
+void Widget::filterTcp(){
+    currentFilter = tcpTag;
+    ui->log->clear();
+    for (int i = 0;i<tcpMessageCounter;i++){
+        ui->log->appendPlainText(tcpMessages[i+1]);
+    }
+}
+
+void Widget::filterUdp(){
+    currentFilter = udpTag;
+    ui->log->clear();
+    for (int i = 0;i<udpMessageCounter;i++){
+        ui->log->appendPlainText(udpMessages[i+1]);
+    }
+}
+
+void Widget::filterChat(){
+    currentFilter = chatTag;
+    ui->log->clear();
+    for (int i = 0;i<chatMessageCounter;i++){
+        ui->log->appendPlainText(chatMessages[i+1]);
+    }
+}
+
+void Widget::filterGlobal(){
+    currentFilter = "GLOBAL";
+    ui->log->clear();
+    for (int i = 0;i<globalMessageCounter;i++){
+        ui->log->appendPlainText(globalMessages[i+1]);
+    }
+}
+
+
 
 /// Reads the config file (server.ini) and start the server accordingly
 void Widget::startServer()
@@ -277,6 +356,10 @@ void Widget::startServer()
 
     if (enableLoginServer || enableGameServer)
         logStatusMessage("Server started", sysTag);
+    connect(ui->tcpFilter, SIGNAL(clicked()), this, SLOT(filterTcp()));
+    connect(ui->udpFilter, SIGNAL(clicked()), this, SLOT(filterUdp()));
+    connect(ui->chatFilter, SIGNAL(clicked()), this, SLOT(filterChat()));
+    connect(ui->globalFilter, SIGNAL(clicked()), this, SLOT(filterGlobal()));
 
     connect(ui->sendButton, SIGNAL(clicked()), this, SLOT(sendCmdLine()));
     if (enableLoginServer)

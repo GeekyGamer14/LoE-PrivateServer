@@ -110,7 +110,7 @@
        <string>TCP Messages</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButton">
+     <widget class="QRadioButton" name="globalFilter">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -121,6 +121,9 @@
       </property>
       <property name="text">
        <string>Global</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>

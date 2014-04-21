@@ -60,14 +60,10 @@ public:
     int getNewNetviewId();
     int getNewId();
     // Filters
-    int udpMessageCounter;
-    QString udpMessages[];
-    int chatMessageCounter;
-    QString chatMessages[];
-    int tcpMessageCounter;
-    QString tcpMessages[];
-    int globalMessageCounter;
-    QString globalMessages[];
+    QString udpMessages[99999];
+    QString chatMessages[99999];
+    QString tcpMessages[99999];
+    QString globalMessages[99999];
 
     /// UDP/TCP
 public slots:
@@ -75,6 +71,10 @@ public slots:
     void tcpConnectClient();
     void tcpDisconnectClient();
     void tcpProcessPendingDatagrams();
+    void filterTcp();
+    void filterUdp();
+    void filterGlobal();
+    void filterChat();
 public:
     void tcpProcessData(QByteArray data, QTcpSocket *socket);
 
