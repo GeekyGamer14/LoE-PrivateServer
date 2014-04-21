@@ -41,8 +41,7 @@ HEADERS  += widget.h \
     items.h \
     sendMessage.h \
     receiveAck.h \
-    receiveChatMessage.h \
-    tag.h
+    receiveChatMessage.h
 
 FORMS    += widget.ui
 

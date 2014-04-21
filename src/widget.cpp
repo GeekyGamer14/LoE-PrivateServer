@@ -40,28 +40,44 @@ Widget::Widget(QWidget *parent) :
 void Widget::logStatusMessage(QString msg, QString tag){
     if(msg.startsWith("> ")){
         // basically show commands in all of them
+        if(udpMessageCounter > 99998)
+            // reset the counter so the program doesn't explode
+            udpMessageCounter = 0;
         udpMessageCounter++;
         udpMessages[udpMessageCounter] = msg;
+        if(tcpMessageCounter > 99998)
+            tcpMessageCounter = 0;
         tcpMessageCounter++;
         tcpMessages[tcpMessageCounter] = msg;
+        if(chatMessageCounter > 99998)
+            chatMessageCounter = 0;
         chatMessageCounter++;
         chatMessages[chatMessageCounter] = msg;
         ui->log->appendPlainText(msg);
         ui->log->repaint();
     }else{
         if(tag == udpTag)
+            if(udpMessageCounter > 99998)
+                // reset the counter so the program doesn't explode
+                udpMessageCounter = 0;
             udpMessageCounter++;
             udpMessages[udpMessageCounter] = msg;
 
         if(tag == tcpTag)
+            if(tcpMessageCounter > 99998)
+                tcpMessageCounter = 0;
             tcpMessageCounter++;
             tcpMessages[tcpMessageCounter] = msg;
 
         if(tag == chatTag)
+            if(chatMessageCounter > 99998)
+                chatMessageCounter = 0;
             chatMessageCounter++;
             chatMessages[chatMessageCounter] = msg;
     }
 
+    if(globalMessageCounter > 99998)
+        globalMessageCounter = 0;
     globalMessageCounter++;
     globalMessages[globalMessageCounter] = msg;
 
@@ -77,28 +93,43 @@ void Widget::logStatusMessage(QString msg, QString tag){
 void Widget::logMessage(QString msg, QString tag){
     if(msg.startsWith("> ")){
         // basically show commands in all of them
+        if(udpMessageCounter > 99998)
+            // reset the counter so the program doesn't explode
+            udpMessageCounter = 0;
         udpMessageCounter++;
         udpMessages[udpMessageCounter] = msg;
+        if(tcpMessageCounter > 99998)
+            tcpMessageCounter = 0;
         tcpMessageCounter++;
         tcpMessages[tcpMessageCounter] = msg;
+        if(chatMessageCounter > 99998)
+            chatMessageCounter = 0;
         chatMessageCounter++;
         chatMessages[chatMessageCounter] = msg;
         ui->log->appendPlainText(msg);
         ui->log->repaint();
     }else{
         if(tag == udpTag)
+            if(udpMessageCounter > 99998)
+                // reset the counter so the program doesn't explode
+                udpMessageCounter = 0;
             udpMessageCounter++;
             udpMessages[udpMessageCounter] = msg;
 
         if(tag == tcpTag)
+            if(tcpMessageCounter > 99998)
+                tcpMessageCounter = 0;
             tcpMessageCounter++;
             tcpMessages[tcpMessageCounter] = msg;
 
         if(tag == chatTag)
+            if(chatMessageCounter > 99998)
+                chatMessageCounter = 0;
             chatMessageCounter++;
             chatMessages[chatMessageCounter] = msg;
     }
-
+    if(globalMessageCounter > 99998)
+        globalMessageCounter = 0;
     globalMessageCounter++;
     globalMessages[globalMessageCounter] = msg;
 
@@ -147,8 +178,7 @@ void Widget::filterGlobal(){
 /// Reads the config file (server.ini) and start the server accordingly
 void Widget::startServer()
 {
-    logStatusMessage("iQuestria Private Server v0.5.2-alpha", sysTag);
-    logStatusMessage("Project adapted from GitHub repo tux3/LoE-PrivateServer", sysTag);
+    logStatusMessage("LoE Private Server v0.5.2-alpha", sysTag);
 #ifdef __APPLE__
     // this fixes the directory in OSX so we can use the relative CONFIGFILEPATH and etc properly
     CFBundleRef mainBundle = CFBundleGetMainBundle();
