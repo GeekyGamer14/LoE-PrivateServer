@@ -19,14 +19,15 @@ void Widget::udpProcessPendingDatagrams()
             qint64 readNow = udpSocket->readDatagram(datagram.data()+dataRead, datagramSize, &rAddr, &rPort); // le +dataRead sur un tableau, ça décale le pointeur d'un offset de taille dataRead !
             if(readNow != -1)
             {
-                dataRead += readNow; // Compte le nombre d'octets lus au total, s'arreter quand dataRead atteint pendingDatagramSize
+                dataRead += readNow; // Counts the number of bytes read in total, stop when DataRead reached pendingDatagramSize
                 if (datagramSize > (datagram.size() - dataRead)) // Evite de lire après la fin du tableau en mode fragmenté, evite donc que dataSent dépasse datagramSize, sinon Overflow et envoi de données inutiles et aléatoires !!
                     datagramSize = (datagram.size() - dataRead);
                 //QMessageBox::information(NULL,"SenderInfo",QString("DatagramSize : %1  sentNow : %2  dataSent : %3 Sizeof(datagram->data()) : %4").arg(QString().setNum(datagramSize),QString().setNum(sentNow),QString().setNum(dataSent),QString().setNum(datagram->size())));
             }
             else
             {
-                logStatusMessage(QString("Socket error : ").arg(udpSocket->errorString()));
+                // Here, we add a message to the udpMessages for filtering later.
+                logStatusMessage(QString("Socket error: ").arg(udpSocket->errorString()), udpTag);
                 return;
             }
         }
@@ -38,9 +39,9 @@ void Widget::udpProcessPendingDatagrams()
             QString name = dataToString(datagram.right(datagram.size()-22));
             int nameFullSize = getVUint32Size(datagram.right(datagram.size()-22))+name.size();
             QString sesskey = dataToString(datagram.right(datagram.size()-22-nameFullSize));
-            //logMessage(QString("UDP: Connect detected with name : ")+name);
-            //logMessage(QString("UDP: Connect detected with sesskey : ")+sesskey);
-            //logMessage(QString("UDP: Datagram was : ")+datagram.toHex());
+            //logMessage(QString("UDP: Connect detected with name : ")+name, udpTag);
+            //logMessage(QString("UDP: Connect detected with sesskey : ")+sesskey, udpTag);
+            //logMessage(QString("UDP: Datagram was : ")+datagram.toHex(), udpTag);
 
             bool is_sesskey_valid = true;
 
@@ -50,7 +51,7 @@ void Widget::udpProcessPendingDatagrams()
 
             if (is_sesskey_valid)
             {
-                //logMessage("Sesskey token accepted");
+                //logMessage("Sesskey token accepted", udpTag);
 
                 // Create new player if needed, else just update player
                 Player* newPlayer = Player::findPlayer(udpPlayers, rAddr.toString(),rPort);
@@ -69,7 +70,7 @@ void Widget::udpProcessPendingDatagrams()
                             n++;
                     if (n>=maxConnected)
                     {
-                        sendMessage(newPlayer, MsgDisconnect, "Error : Too much players connected. Try again later.");
+                        sendMessage(newPlayer, MsgDisconnect, "Error: Too many players connected. Try again later.");
                     }
                     else
                         // If not add the player
@@ -79,7 +80,7 @@ void Widget::udpProcessPendingDatagrams()
                 {
                     if (newPlayer->connected) // TODO: Error, player already connected
                     {
-                        sendMessage(newPlayer, MsgDisconnect, "Error : Player already connected.");
+                        sendMessage(newPlayer, MsgDisconnect, "Error: Player already connected.");
                         return;
                     }
 
@@ -90,7 +91,7 @@ void Widget::udpProcessPendingDatagrams()
                             n++;
                     if (n>=maxConnected)
                     {
-                        sendMessage(newPlayer, MsgDisconnect, "Error : Too much players connected. Try again later.");
+                        sendMessage(newPlayer, MsgDisconnect, "Error: Too many players connected. Try again later.");
                     }
 
                     newPlayer->resetNetwork();
@@ -104,8 +105,7 @@ void Widget::udpProcessPendingDatagrams()
             {
                 QString badHash = QCryptographicHash::hash((QString(sesskey.right(40))
                                 +saltPassword).toLatin1(), QCryptographicHash::Md5).toHex();
-                logMessage("UDP: Sesskey rejected: got '"+badHash+"' instead of '"+sesskey.left(32)
-                           +"', passhash was '"+QString(sesskey.right(40)));
+                logMessage("UDP: Sesskey rejected: got '"+badHash+"' instead of '"+sesskey.left(32)+"', passhash was '"+QString(sesskey.right(40)), udpTag);
                 Player* newPlayer = new Player;
                 newPlayer->IP = rAddr.toString();
                 newPlayer->port = rPort;
@@ -117,7 +117,7 @@ void Widget::udpProcessPendingDatagrams()
         Player* player = Player::findPlayer(udpPlayers, rAddr.toString(), rPort);
         if (player->IP == rAddr.toString() && player->port == rPort)
         {
-            // Acquire datas
+            // Acquire data
             player->receivedDatas->append(datagram);
 
             // Process data
@@ -125,8 +125,8 @@ void Widget::udpProcessPendingDatagrams()
         }
         else // You need to connect with TCP first
         {
-            logMessage("UDP: Request from unknown peer rejected : "+rAddr.toString()+":"+QString().setNum(rPort));
-            // Send disconnect message manually
+            logMessage("UDP: Request from unknown peer rejected : "+rAddr.toString()+":"+QString().setNum(rPort), udpTag);
+            // Send disconnect message manually, with an appropriate message.
             QString data("BITCH, YOU ARE EITHER A HACKER OR THE SERVER JUST HATES THE FUCK OUT OF YOU. RELOG OR YOU AINT GETTIN ON THIS SERVER, K?");
             QByteArray msg(6,0);
             msg[0] = MsgDisconnect;

@@ -26,6 +26,7 @@
 #include "scene.h"
 #include "sync.h"
 #include "quest.h"
+#include "tag.h"
 
 #define PLAYERSPATH "data/players/"
 #define NETDATAPATH "data/netData/"
@@ -47,13 +48,20 @@ public slots:
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
-    void logMessage(QString msg);
-    void logStatusMessage(QString msg);
+    void logMessage(QString msg, QString tag);
+    void logStatusMessage(QString msg, QString tag);
     void startServer();
     void stopServer(); // Calls stopServer(true)
     void stopServer(bool log);
     int getNewNetviewId();
     int getNewId();
+    // Filters
+    int udpMessageCounter = 0;
+    QString udpMessages[udpMessageCounter];
+    int chatMessageCounter = 0;
+    QString chatMessages[chatMessageCounter];
+    int tcpMessageCounter = 0;
+    QString tcpMessages[tcpMessageCounter];
 
     /// UDP/TCP
 public slots:

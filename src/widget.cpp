@@ -28,8 +28,16 @@ Widget::Widget(QWidget *parent) :
 }
 
 /// Adds the message in the log, and sets it as the status message
-void Widget::logStatusMessage(QString msg)
-{
+void Widget::logStatusMessage(QString msg, QString tag){
+    if(tag = udpTag)
+        udpMessages[udpMessageCounter++] = msg;
+
+    if(tag = tcpTag)
+        tcpMessages[tcpMessageCounter++] = msg;
+
+    if(tag = chatTag)
+        chatMessages[chatMessageCounter++] = msg;
+
     ui->log->appendPlainText(msg);
     ui->status->setText(msg);
     ui->log->repaint();
@@ -37,8 +45,16 @@ void Widget::logStatusMessage(QString msg)
 }
 
 /// Adds the message to the log
-void Widget::logMessage(QString msg)
-{
+void Widget::logMessage(QString msg, QString tag){
+    if(tag = udpTag)
+        udpMessages[udpMessageCounter++] = msg;
+
+    if(tag = tcpTag)
+        tcpMessages[tcpMessageCounter++] = msg;
+
+    if(tag = chatTag)
+        chatMessages[chatMessageCounter++] = msg;
+
     if (!logInfos)
         return;
     ui->log->appendPlainText(msg);

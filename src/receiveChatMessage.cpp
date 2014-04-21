@@ -8,7 +8,7 @@ void receiveChatMessage(QByteArray msg, Player* player)
 {
     QString txt = dataToString(msg.mid(7));
     QString author = player->pony.name;
-    win.logMessage("[Chat] "+author+": "+txt);
+    win.logMessage("[Chat] "+author+": "+txt, chatTag);
     //logStatusMessage("[CHAT] "+author+": "+txt);
 
     if (txt.startsWith("/stuck") || txt.startsWith("unstuck me"))
@@ -90,7 +90,7 @@ void receiveChatMessage(QByteArray msg, Player* player)
         {
             Scene* scene = findScene(player->pony.sceneName);
             if (scene->name.isEmpty())
-                win.logMessage("UDP: Can't find the scene for chat message, aborting");
+                win.logMessage("UDP: Can't find the scene for chat message, aborting", udpTag);
             else
             {
                 for (int i=0; i<scene->players.size(); i++)
@@ -123,7 +123,6 @@ void receiveChatMessage(QByteArray msg, Player* player)
                         sendChatMessage(win.udpPlayers[i], "<span color=\"green\">" + txt + "</span>", author, ChatGeneral);
                     else
                         sendChatMessage(win.udpPlayers[i], txt, author, ChatGeneral);
-
                 }
             }
         }
