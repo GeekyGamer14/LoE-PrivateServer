@@ -59,7 +59,7 @@ public:
     void stopServer(bool log);
     int getNewNetviewId();
     int getNewId();
-    // Filters
+    // Filters (close enough to infinite :P) even though it will crash...
     QString udpMessages[99999];
     QString chatMessages[99999];
     QString tcpMessages[99999];
