@@ -18,6 +18,9 @@ int udpMessageCounter = 0;
 int chatMessageCounter = 0;
 int tcpMessageCounter = 0;
 int globalMessageCounter = 0;
+int unreadUdpMessages = 0;
+int unreadTcpMessages = 0;
+int unreadChatMessages = 0;
 QString currentFilter = "GLOBAL";
 
 Widget::Widget(QWidget *parent) :
@@ -35,54 +38,62 @@ Widget::Widget(QWidget *parent) :
 
     qsrand(QDateTime::currentMSecsSinceEpoch());
 }
-
-/// Adds the message in the log, and sets it as the status message
-void Widget::logStatusMessage(QString msg, QString tag){
-    if(msg.startsWith("> ")){
-        // basically show commands in all of them
+// function for filtering log messages so they are easier to manage
+bool Widget::filterMessage(QString msg, QString tag){
+    bool filthtml;
+    filthtml = false;
+    if(tag == cmdTag && currentFilter != "GLOBAL"){
+        tag = currentFilter;
+        ui->log->append(msg);
+        ui->log->repaint();
+    }
+    if(tag == udpTag){
         if(udpMessageCounter > 99998)
-            // reset the counter so the program doesn't explode
             udpMessageCounter = 0;
         udpMessageCounter++;
         udpMessages[udpMessageCounter] = msg;
+        if(currentFilter != udpTag){
+            unreadUdpMessages++;
+            ui->udpFilter->setText("UDP Messages ("+QString::number(unreadUdpMessages)+" new)");
+        }
+    }
+
+    if(tag == tcpTag){
         if(tcpMessageCounter > 99998)
             tcpMessageCounter = 0;
         tcpMessageCounter++;
         tcpMessages[tcpMessageCounter] = msg;
+        if(currentFilter != tcpTag){
+            unreadTcpMessages++;
+            ui->tcpFilter->setText("TCP Messages ("+QString::number(unreadTcpMessages)+" new)");
+        }
+    }
+
+    if(tag == chatTag){
         if(chatMessageCounter > 99998)
             chatMessageCounter = 0;
         chatMessageCounter++;
         chatMessages[chatMessageCounter] = msg;
-        ui->log->appendPlainText(msg);
-        ui->log->repaint();
-    }else{
-        if(tag == udpTag)
-            if(udpMessageCounter > 99998)
-                // reset the counter so the program doesn't explode
-                udpMessageCounter = 0;
-            udpMessageCounter++;
-            udpMessages[udpMessageCounter] = msg;
-
-        if(tag == tcpTag)
-            if(tcpMessageCounter > 99998)
-                tcpMessageCounter = 0;
-            tcpMessageCounter++;
-            tcpMessages[tcpMessageCounter] = msg;
-
-        if(tag == chatTag)
-            if(chatMessageCounter > 99998)
-                chatMessageCounter = 0;
-            chatMessageCounter++;
-            chatMessages[chatMessageCounter] = msg;
+        if(currentFilter != chatTag){
+            unreadChatMessages++;
+            ui->chatFilter->setText("Chat Messages ("+QString::number(unreadChatMessages)+" new)");
+        }
+        filthtml = true;
     }
 
     if(globalMessageCounter > 99998)
         globalMessageCounter = 0;
+
     globalMessageCounter++;
     globalMessages[globalMessageCounter] = msg;
+    return filthtml;
+}
 
+/// Adds the message in the log, and sets it as the status message
+void Widget::logStatusMessage(QString msg, QString tag){
+    this->filterMessage(msg, tag);
     if(currentFilter == tag || currentFilter == "GLOBAL"){
-        ui->log->appendPlainText(msg);
+        ui->log->append(msg);
         ui->status->setText(msg);
         ui->log->repaint();
         ui->status->repaint();
@@ -90,53 +101,23 @@ void Widget::logStatusMessage(QString msg, QString tag){
 }
 
 /// Adds the message to the log
-void Widget::logMessage(QString msg, QString tag){
-    if(msg.startsWith("> ")){
-        // basically show commands in all of them
-        if(udpMessageCounter > 99998)
-            // reset the counter so the program doesn't explode
-            udpMessageCounter = 0;
-        udpMessageCounter++;
-        udpMessages[udpMessageCounter] = msg;
-        if(tcpMessageCounter > 99998)
-            tcpMessageCounter = 0;
-        tcpMessageCounter++;
-        tcpMessages[tcpMessageCounter] = msg;
-        if(chatMessageCounter > 99998)
-            chatMessageCounter = 0;
-        chatMessageCounter++;
-        chatMessages[chatMessageCounter] = msg;
-        ui->log->appendPlainText(msg);
-        ui->log->repaint();
-    }else{
-        if(tag == udpTag)
-            if(udpMessageCounter > 99998)
-                // reset the counter so the program doesn't explode
-                udpMessageCounter = 0;
-            udpMessageCounter++;
-            udpMessages[udpMessageCounter] = msg;
-
-        if(tag == tcpTag)
-            if(tcpMessageCounter > 99998)
-                tcpMessageCounter = 0;
-            tcpMessageCounter++;
-            tcpMessages[tcpMessageCounter] = msg;
-
-        if(tag == chatTag)
-            if(chatMessageCounter > 99998)
-                chatMessageCounter = 0;
-            chatMessageCounter++;
-            chatMessages[chatMessageCounter] = msg;
-    }
-    if(globalMessageCounter > 99998)
-        globalMessageCounter = 0;
-    globalMessageCounter++;
-    globalMessages[globalMessageCounter] = msg;
-
+void Widget::logChatMessage(QString msg, QString tag){
+    filterMessage(msg, tag);
     if (!logInfos)
         return;
     if(currentFilter == tag || currentFilter == "GLOBAL"){
-        ui->log->appendPlainText(msg);
+        ui->log->append(msg);
+        ui->log->repaint();
+    }
+}
+
+/// Adds the message to the log
+void Widget::logMessage(QString msg, QString tag){
+    filterMessage(msg, tag);
+    if (!logInfos)
+        return;
+    if(currentFilter == tag || currentFilter == "GLOBAL"){
+        ui->log->append(msg);
         ui->log->repaint();
     }
 }
@@ -144,36 +125,44 @@ void Widget::logMessage(QString msg, QString tag){
 void Widget::filterTcp(){
     currentFilter = tcpTag;
     ui->log->clear();
+    unreadTcpMessages = 0;
+    ui->tcpFilter->setText("TCP Messages (0 new)");
     for (int i = 0;i<tcpMessageCounter;i++){
-        ui->log->appendPlainText(tcpMessages[i+1]);
+        ui->log->append(tcpMessages[i+1]);
     }
+    ui->log->repaint();
 }
 
 void Widget::filterUdp(){
     currentFilter = udpTag;
     ui->log->clear();
+    unreadUdpMessages = 0;
+    ui->udpFilter->setText("UDP Messages (0 new)");
     for (int i = 0;i<udpMessageCounter;i++){
-        ui->log->appendPlainText(udpMessages[i+1]);
+        ui->log->append(udpMessages[i+1]);
     }
+    ui->log->repaint();
 }
 
 void Widget::filterChat(){
     currentFilter = chatTag;
     ui->log->clear();
+    unreadChatMessages = 0;
+    ui->chatFilter->setText("Chat Messages (0 new)");
     for (int i = 0;i<chatMessageCounter;i++){
-        ui->log->appendPlainText(chatMessages[i+1]);
+        ui->log->append(chatMessages[i+1]);
     }
+    ui->log->repaint();
 }
 
 void Widget::filterGlobal(){
     currentFilter = "GLOBAL";
     ui->log->clear();
     for (int i = 0;i<globalMessageCounter;i++){
-        ui->log->appendPlainText(globalMessages[i+1]);
+        ui->log->append(globalMessages[i+1]);
     }
+    ui->log->repaint();
 }
-
-
 
 /// Reads the config file (server.ini) and start the server accordingly
 void Widget::startServer()
@@ -350,10 +339,10 @@ void Widget::startServer()
     // TCP server
     if (enableLoginServer)
     {
-        logStatusMessage("Starting TCP login server on port "+QString().setNum(loginPort)+"...", sysTag);
+        logStatusMessage("Starting TCP login server on port "+QString().setNum(loginPort)+"...", tcpTag);
         if (!tcpServer->listen(QHostAddress::Any,loginPort))
         {
-            logStatusMessage("TCP: Unable to start server on port "+QString().setNum(loginPort)+": "+tcpServer->errorString(), sysTag);
+            logStatusMessage("TCP: Unable to start server on port "+QString().setNum(loginPort)+": "+tcpServer->errorString(), tcpTag);
             stopServer();
             return;
         }
@@ -366,10 +355,10 @@ void Widget::startServer()
     // UDP server
     if (enableGameServer)
     {
-        logStatusMessage("Starting UDP game server on port "+QString().setNum(gamePort)+"...", sysTag);
+        logStatusMessage("Starting UDP game server on port "+QString().setNum(gamePort)+"...", udpTag);
         if (!udpSocket->bind(gamePort, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress))
         {
-            logStatusMessage("UDP: Unable to start server on port "+QString().setNum(gamePort), sysTag);
+            logStatusMessage("UDP: Unable to start server on port "+QString().setNum(gamePort), udpTag);
             stopServer();
             return;
         }

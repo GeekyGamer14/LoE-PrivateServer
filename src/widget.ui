@@ -19,7 +19,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="3">
-    <widget class="QPlainTextEdit" name="log">
+    <widget class="QTextEdit" name="log">
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -81,7 +81,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Chat Messages</string>
+       <string>Chat Messages (0 new)</string>
       </property>
      </widget>
      <widget class="QRadioButton" name="udpFilter">
@@ -89,12 +89,12 @@
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>93</width>
+        <width>141</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>UDP Messages</string>
+       <string>UDP Messages (0 new)</string>
       </property>
      </widget>
      <widget class="QRadioButton" name="tcpFilter">
@@ -102,12 +102,12 @@
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>92</width>
+        <width>141</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>TCP Messages</string>
+       <string>TCP Messages (0 new)</string>
       </property>
      </widget>
      <widget class="QRadioButton" name="globalFilter">

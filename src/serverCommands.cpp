@@ -14,7 +14,7 @@ void Widget::sendCmdLine()
     }
 
     QString str = ui->cmdLine->text();
-    win.logMessage("> "+str, sysTag);
+    win.logMessage("> "+str, cmdTag);
     ui->cmdLine->setText("");
 
     if (str == "clear")

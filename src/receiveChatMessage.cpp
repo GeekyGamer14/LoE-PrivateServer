@@ -8,7 +8,7 @@ void receiveChatMessage(QByteArray msg, Player* player)
 {
     QString txt = dataToString(msg.mid(7));
     QString author = player->pony.name;
-    win.logMessage("[Chat] "+author+": "+txt, chatTag);
+    win.logChatMessage("[Chat] "+author+": "+"<span color=\"green\">" + txt + "</span>", chatTag);
     //logStatusMessage("[CHAT] "+author+": "+txt);
 
     if (txt.startsWith("/stuck") || txt.startsWith("unstuck me"))

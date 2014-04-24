@@ -35,6 +35,7 @@
 #define chatTag "CHAT"
 #define udpTag "UDP"
 #define tcpTag "TCP"
+#define cmdTag "CMD"
 
 namespace Ui {
 class Widget;
@@ -54,9 +55,11 @@ public:
     // going for the android tag approach for filters, heh.
     void logMessage(QString msg, QString tag);
     void logStatusMessage(QString msg, QString tag);
+    void logChatMessage(QString msg, QString tag);
     void startServer();
     void stopServer(); // Calls stopServer(true)
     void stopServer(bool log);
+    bool filterMessage(QString msg, QString tag);
     int getNewNetviewId();
     int getNewId();
     // Filters (close enough to infinite :P) even though it will crash...
